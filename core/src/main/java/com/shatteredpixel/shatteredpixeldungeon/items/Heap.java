@@ -62,6 +62,7 @@ public class Heap implements Bundlable {
 	public enum Type {
 		HEAP,
 		FOR_SALE,
+		FOR_SOUL_SALE,
 		CHEST,
 		LOCKED_CHEST,
 		CRYSTAL_CHEST,
@@ -367,6 +368,11 @@ public class Heap implements Bundlable {
 
 	public String title(){
 		switch(type){
+			case FOR_SOUL_SALE:
+				Item f = peek();
+				if (size() == 1) {
+					return f.title();
+				}
 			case FOR_SALE:
 				Item i = peek();
 				if (size() == 1) {

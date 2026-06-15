@@ -186,7 +186,7 @@ import com.watabou.utils.Random;
 
 import com.shatteredpixel.shatteredpixeldungeon.expanded.SoulPact;
 
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndSoulTradeItem;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.WndSoulTradeItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
