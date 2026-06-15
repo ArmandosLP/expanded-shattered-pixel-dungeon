@@ -72,7 +72,12 @@ public class BloodPactImp extends NPC {
 
 	static final private String SEEN_BEFORE = "SEEN_BEFORE";
 
-	@Override
+    @Override
+    public String description() {
+        return "Stop inspecting me and come talk to me.";
+    }
+
+
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
 		seenBefore = bundle.getBoolean( SEEN_BEFORE );
