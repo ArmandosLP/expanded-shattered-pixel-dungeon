@@ -215,7 +215,7 @@ public class ItemSprite extends MovieClip {
 		}
 
 		switch (heap.type) {
-			case HEAP: case FOR_SALE:
+			case HEAP: case FOR_SALE: case FOR_SOUL_SALE:
 				view( heap.peek() ); break;
 			case CHEST:
 				view( ItemSpriteSheet.CHEST, null ); break;
