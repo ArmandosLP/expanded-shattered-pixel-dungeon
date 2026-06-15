@@ -398,6 +398,11 @@ public class ScrollOfTransmutation extends InventoryScroll {
 	}
 
 	@Override
+	public int soulValue() {
+		return super.soulValue() * 2;
+	}
+
+	@Override
 	public int energyVal() {
 		return isKnown() ? 10 * quantity : super.energyVal();
 	}

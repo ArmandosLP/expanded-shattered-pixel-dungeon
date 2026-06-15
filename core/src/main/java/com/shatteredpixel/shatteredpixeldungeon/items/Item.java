@@ -549,6 +549,12 @@ public class Item implements Bundlable {
 		return 0;
 	}
 
+	//item's value in HT price / soul trade
+	public int soulValue() {
+		return 10;
+	}
+
+
 	//item's value in energy crystals
 	public int energyVal() {
 		return 0;

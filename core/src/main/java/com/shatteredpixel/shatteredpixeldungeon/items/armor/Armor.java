@@ -701,7 +701,19 @@ public class Armor extends EquipableItem {
 		//strength req decreases at +1,+3,+6,+10,etc.
 		return (8 + Math.round(tier * 2)) - (int)(Math.sqrt(8 * lvl + 1) - 1)/2;
 	}
-	
+
+
+	@Override
+	public int soulValue() {
+		int price = super.soulValue();
+		// +3 per tier, starting from tier 2
+		price += (3 * (tier - 1));
+		// +8 per level
+		price += (8 * level());
+
+		return price;
+	}
+
 	@Override
 	public int value() {
 		if (seal != null) return 0;

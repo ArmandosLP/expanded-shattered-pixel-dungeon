@@ -288,7 +288,15 @@ public class Ring extends KindofMisc {
 	public static boolean allKnown() {
 		return handler != null && handler.known().size() == Generator.Category.RING.classes.length;
 	}
-	
+
+	@Override
+	public int soulValue() {
+		int price = 15;
+
+		price += (level() * 5);
+		return price;
+	}
+
 	@Override
 	public int value() {
 		int price = 75;

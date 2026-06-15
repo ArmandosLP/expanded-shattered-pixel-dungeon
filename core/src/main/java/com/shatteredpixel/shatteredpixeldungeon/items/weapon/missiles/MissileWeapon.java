@@ -691,7 +691,19 @@ abstract public class MissileWeapon extends Weapon {
 	public String statsInfo(){
 		return Messages.get(this, "stats_desc");
 	}
-	
+
+
+	@Override
+	public int soulValue() {
+		int price = super.soulValue();
+		// +2 per tier, starting from tier 2
+		price += (2 * (tier - 1));
+		// +6 per level
+		price += (6 * level());
+
+		return price;
+	}
+
 	@Override
 	public int value() {
 		int price = 5 * tier * quantity;
