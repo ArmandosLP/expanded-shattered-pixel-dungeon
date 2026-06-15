@@ -50,6 +50,9 @@ public class BuffIndicator extends Component {
 
 	//FIXME this is becoming a mess, should do a big cleaning pass on all of these
 	//and think about tinting options
+
+	public static final int BLOOD_PACT = 126;
+
 	public static final int MIND_VISION = 0;
 	public static final int LEVITATION  = 1;
 	public static final int FIRE        = 2;
