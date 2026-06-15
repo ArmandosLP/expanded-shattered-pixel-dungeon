@@ -111,6 +111,8 @@ public class Dungeon {
 		TRINKET_CATA,
 		LAB_ROOM, //actually a room, but logic is the same
 
+		BLOOD_PACT_CHANCE, // Well actually, same logic Evan. hehe
+
 		//Health potion sources
 		//enemies
 		SWARM_HP,

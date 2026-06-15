@@ -184,6 +184,10 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
+import com.shatteredpixel.shatteredpixeldungeon.expanded.SoulPact;
+
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndSoulTradeItem;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -262,10 +266,19 @@ public class Hero extends Char {
 			HT += buff(ElixirOfMight.HTBoost.class).boost();
 		}
 		
+		SoulPact soulPact = buff(SoulPact.class);
+		if (soulPact != null){
+			HT -= soulPact.value();
+			if (HT < 1){
+				HT = 1;
+			}
+		}
+		
 		if (boostHP){
 			HP += Math.max(HT - curHT, 0);
 		}
 		HP = Math.min(HP, HT);
+
 	}
 
 	public int STR() {
@@ -1023,13 +1036,23 @@ public class Hero extends Char {
 			ready();
 			
 			Heap heap = Dungeon.level.heaps.get( dst );
-			if (heap != null && heap.type == Type.FOR_SALE && heap.size() == 1) {
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						GameScene.show( new WndTradeItem( heap ) );
-					}
-				});
+
+			if (heap != null && heap.size() == 1){
+				if (heap.type == Type.FOR_SALE){
+					Game.runOnRenderThread(new Callback() {
+						@Override
+						public void call() {
+							GameScene.show( new WndTradeItem( heap ) );
+						}
+					});
+				}else if(heap.type == Type.FOR_SOUL_SALE){
+					Game.runOnRenderThread(new Callback() {
+						@Override
+						public void call() {
+							GameScene.show( new WndSoulTradeItem( heap ) );
+						}
+					});
+				}
 			}
 
 			return false;
@@ -1929,7 +1952,7 @@ public class Hero extends Char {
 			case HEAP:
 				curAction = new HeroAction.PickUp( cell );
 				break;
-			case FOR_SALE:
+			case FOR_SALE: case FOR_SOUL_SALE:
 				curAction = heap.size() == 1 && heap.peek().value() > 0 ?
 					new HeroAction.Buy( cell ) :
 					new HeroAction.PickUp( cell );
@@ -2138,11 +2161,15 @@ public class Hero extends Char {
 			}
 		}
 
+
 		if (ankh != null) {
 			interrupt();
 
 			if (ankh.isBlessed()) {
-				this.HP = HT / 4;
+
+				// Hero can have 1 HT because of Pact
+				// Avoid resurrecting with 0 HP
+				this.HP = Math.max(1,HT / 4);
 
 				PotionOfHealing.cure(this);
 				Buff.prolong(this, Invulnerability.class, Invulnerability.DURATION);

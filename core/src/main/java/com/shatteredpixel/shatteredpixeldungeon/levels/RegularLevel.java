@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.BloodPactRoom;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -49,6 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.journal.GuidePage;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.RegionLorePage;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.CrystalKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.GoldenKey;
+import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.Key;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.CrackedSpyglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
@@ -139,9 +141,24 @@ public abstract class RegularLevel extends Level {
 			i += s.sizeFactor()-1;
 			initRooms.add(s);
 		}
-		
+
 		if (Dungeon.shopOnLevel())
 			initRooms.add(new ShopRoom());
+
+		// ExpandedMod Pact chance
+		// Expected 2 pact rooms per run
+		// Not getting a pact room in a run is extremely rare
+		int pactChance = Dungeon.LimitedDrops.BLOOD_PACT_CHANCE.count;
+
+		if (Random.Int(100) + 1 <= pactChance){
+			initRooms.add(new BloodPactRoom());
+			addItemToSpawn(new IronKey(Dungeon.depth));
+			pactChance = Math.max(0, pactChance - 30);
+		}else{
+			pactChance += 3;
+		}
+
+		Dungeon.LimitedDrops.BLOOD_PACT_CHANCE.count = pactChance;
 
 		//force max special rooms and add one more for large levels
 		int specials = specialRooms(feeling == Feeling.LARGE);
@@ -154,17 +171,17 @@ public abstract class RegularLevel extends Level {
 			if (s instanceof PitRoom) specials++;
 			initRooms.add(s);
 		}
-		
+
 		int secrets = SecretRoom.secretsForFloor(Dungeon.depth);
 		//one additional secret for secret levels
 		if (feeling == Feeling.SECRETS) secrets++;
 		for (int i = 0; i < secrets; i++) {
 			initRooms.add(SecretRoom.createRoom());
 		}
-		
+
 		return initRooms;
 	}
-	
+
 	protected int standardRooms(boolean forceMax){
 		return 0;
 	}
