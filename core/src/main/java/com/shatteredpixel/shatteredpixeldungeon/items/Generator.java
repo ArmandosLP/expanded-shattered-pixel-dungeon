@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.LuckyCoin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClericArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
@@ -594,9 +595,11 @@ public class Generator {
 					ShardOfOblivion.class,
 					ChaoticCenser.class,
 					FerretTuft.class,
-					CrackedSpyglass.class
+					CrackedSpyglass.class,
+                    // Expanded mod
+                    LuckyCoin.class
 			};
-			TRINKET.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+			TRINKET.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 			TRINKET.probs = TRINKET.defaultProbs.clone();
 
 			for (Category cat : Category.values()){

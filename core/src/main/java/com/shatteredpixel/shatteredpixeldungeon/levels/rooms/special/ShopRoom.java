@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.LuckyCoin;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -92,6 +93,9 @@ public class ShopRoom extends SpecialRoom {
 		}
 		spacesNeeded += 4;
 
+        // Add a fixed amount of space needed for extra items even if player does not have Lucky coin
+        spacesNeeded += 8;
+
 		//we also add 1 more space, for the shopkeeper
 		spacesNeeded++;
 		return spacesNeeded;
@@ -128,6 +132,18 @@ public class ShopRoom extends SpecialRoom {
 			itemsToSpawn = generateItems();
 		}
 
+        Random.pushGenerator(Random.Long());
+
+        ArrayList<Item> extraItemsToSpawn;
+
+        if (Dungeon.hero.belongings.getItem(LuckyCoin.class) != null){
+            extraItemsToSpawn = generateExtraItems();
+        }else{
+            extraItemsToSpawn = new ArrayList<Item>();
+        }
+
+        Random.popGenerator();
+
 		Point entryInset = new Point(entrance());
 		if (entryInset.y == top){
 			entryInset.y++;
@@ -142,6 +158,8 @@ public class ShopRoom extends SpecialRoom {
 		Point curItemPlace = entryInset.clone();
 
 		int inset = 1;
+
+        itemsToSpawn.addAll(extraItemsToSpawn);
 
 		for (Item item : itemsToSpawn.toArray(new Item[0])) {
 
@@ -218,7 +236,117 @@ public class ShopRoom extends SpecialRoom {
 		}
 
 	}
-	
+
+    protected static ArrayList<Item> generateExtraItems(){
+        ArrayList<Item> itemsToSpawn = new ArrayList<>();
+
+        MeleeWeapon w;
+        MissileWeapon m;
+        switch (Dungeon.depth) {
+            case 6: default:
+                w = (MeleeWeapon) Generator.random(Generator.wepTiers[1]);
+                m = (MissileWeapon) Generator.random(Generator.misTiers[1]);
+                itemsToSpawn.add( new LeatherArmor().identify(false) );
+                break;
+
+            case 11:
+                w = (MeleeWeapon) Generator.random(Generator.wepTiers[2]);
+                m = (MissileWeapon) Generator.random(Generator.misTiers[2]);
+                itemsToSpawn.add( new MailArmor().identify(false) );
+                break;
+
+            case 16:
+                w = (MeleeWeapon) Generator.random(Generator.wepTiers[3]);
+                m = (MissileWeapon) Generator.random(Generator.misTiers[3]);
+                itemsToSpawn.add( new ScaleArmor().identify(false) );
+                break;
+
+            case 20: case 21:
+                w = (MeleeWeapon) Generator.random(Generator.wepTiers[4]);
+                m = (MissileWeapon) Generator.random(Generator.misTiers[4]);
+                itemsToSpawn.add( new PlateArmor().identify(false) );
+                itemsToSpawn.add( new Torch() );
+                itemsToSpawn.add( new Torch() );
+                itemsToSpawn.add( new Torch() );
+                break;
+        }
+        w.enchant(null);
+        w.cursed = false;
+        w.level(0);
+        w.identify(false);
+        itemsToSpawn.add(w);
+
+        m.enchant(null);
+        m.cursed = false;
+        m.level(0);
+        m.identify(false);
+        itemsToSpawn.add(m);
+
+        itemsToSpawn.add( TippedDart.randomTipped(2) );
+
+        itemsToSpawn.add( new Alchemize().quantity(Random.IntRange(2, 3)));
+
+        itemsToSpawn.add( new PotionOfHealing() );
+        itemsToSpawn.add( Generator.randomUsingDefaults( Generator.Category.POTION ) );
+        itemsToSpawn.add( Generator.randomUsingDefaults( Generator.Category.POTION ) );
+
+        itemsToSpawn.add( new ScrollOfIdentify() );
+        itemsToSpawn.add( new ScrollOfRemoveCurse() );
+        itemsToSpawn.add( new ScrollOfMagicMapping() );
+
+        for (int i=0; i < 2; i++)
+            itemsToSpawn.add( Random.Int(2) == 0 ?
+                    Generator.randomUsingDefaults( Generator.Category.POTION ) :
+                    Generator.randomUsingDefaults( Generator.Category.SCROLL ) );
+
+        itemsToSpawn.add( new SmallRation() );
+        itemsToSpawn.add( new SmallRation() );
+
+        switch (Random.Int(4)){
+            case 0:
+                itemsToSpawn.add( new Bomb() );
+                break;
+            case 1:
+            case 2:
+                itemsToSpawn.add( new Bomb.DoubleBomb() );
+                break;
+            case 3:
+                itemsToSpawn.add( new Honeypot() );
+                break;
+        }
+
+        itemsToSpawn.add( new Ankh() );
+        itemsToSpawn.add( new StoneOfAugmentation() );
+
+        Item rare;
+        switch (Random.Int(10)){
+            case 0:
+                rare = Generator.random( Generator.Category.WAND );
+                rare.level( 0 );
+                break;
+            case 1:
+                rare = Generator.random(Generator.Category.RING);
+                rare.level( 0 );
+                break;
+            case 2:
+                rare = Generator.random( Generator.Category.ARTIFACT );
+                break;
+            default:
+                rare = new Stylus();
+        }
+        rare.cursed = false;
+        rare.cursedKnown = true;
+        itemsToSpawn.add( rare );
+
+        ArrayList<Item> extraItemsToSpawn = new ArrayList<>();
+
+        for(int i = 0; i < LuckyCoin.extraShopItems(); i++){
+            extraItemsToSpawn.add(Random.element(itemsToSpawn));
+        }
+
+        return extraItemsToSpawn;
+    }
+
 	protected static ArrayList<Item> generateItems() {
 
 		ArrayList<Item> itemsToSpawn = new ArrayList<>();

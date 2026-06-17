@@ -184,9 +184,9 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
-import com.shatteredpixel.shatteredpixeldungeon.expanded.SoulPact;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.SoulPact;
 
-import com.shatteredpixel.shatteredpixeldungeon.expanded.WndSoulTradeItem;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.windows.WndSoulTradeItem;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.LuckyCoin;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -50,6 +51,14 @@ public class Gold extends Item {
 	public Gold( int value ) {
 		this.quantity = value;
 	}
+
+    public Gold( int value, boolean useMultiplicators ) {
+        if (useMultiplicators){
+            this.quantity = value + (int)(value * LuckyCoin.goldMultiplier());
+        }else{
+            this.quantity = value;
+        }
+    }
 	
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
@@ -88,7 +97,9 @@ public class Gold extends Item {
 	
 	@Override
 	public Item random() {
-		quantity = Random.IntRange( 30 + Dungeon.depth * 10, 60 + Dungeon.depth * 20 );
+        int goldAmount = Random.IntRange( 30 + Dungeon.depth * 10, 60 + Dungeon.depth * 20 );
+        goldAmount = (int)(goldAmount * LuckyCoin.goldMultiplier());
+        quantity = goldAmount;
 		return this;
 	}
 

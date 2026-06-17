@@ -46,8 +46,8 @@ public class ItemSpriteSheet {
 		film.add( item, x, y, x+width, y+height);
 	}
 
-	// EXPANDED
 
+    // EXPANDED Expanded expanded
 	public static final int BLOOD_DROP = xy(16,32) + 0;
 
 
@@ -494,6 +494,10 @@ public class ItemSpriteSheet {
 	}
 
 	private static final int TRINKETS        =                               xy(1, 18);  //32 slots
+
+    // EXPANDED Expanded expanded
+    public static final int LUCKY_COIN       = TRINKETS+15+16;
+
 	public static final int RAT_SKULL       = TRINKETS+0;
 	public static final int PARCHMENT_SCRAP = TRINKETS+1;
 	public static final int PETRIFIED_SEED  = TRINKETS+2;
@@ -512,6 +516,8 @@ public class ItemSpriteSheet {
 	public static final int FERRET_TUFT     = TRINKETS+15;
 	public static final int SPYGLASS        = TRINKETS+16;
 	static{
+        assignItemRect(LUCKY_COIN,      13, 13);
+
 		assignItemRect(RAT_SKULL,       16, 11);
 		assignItemRect(PARCHMENT_SCRAP, 10, 14);
 		assignItemRect(PETRIFIED_SEED,  10, 10);
