@@ -14,8 +14,6 @@ public class SoulPact extends Buff implements Hero.Doom {
 	
 	private int level;
 
-
-
 	private static final String LEVEL = "level";
 
 	{
@@ -23,7 +21,7 @@ public class SoulPact extends Buff implements Hero.Doom {
 		announced = true;
 		revivePersists = true;
 	}
-	
+
 	public static final float DURATION	= 10f;
 	
 	@Override
@@ -74,7 +72,7 @@ public class SoulPact extends Buff implements Hero.Doom {
 	@Override
 	public String desc() {
 		return
-				"You've made a deal with the Ambitious Imp in exchange for goods.\n" +
+				"You've made a deal with the Wandering Imp in exchange for goods.\n" +
 				"\n" +
 				"Soul pact reduces your maximum health by " + value() + ", but it can't reduce it below 1.\n" +
 				"\n" +

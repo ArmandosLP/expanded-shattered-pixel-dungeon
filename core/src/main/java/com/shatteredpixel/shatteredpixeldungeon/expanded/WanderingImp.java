@@ -22,48 +22,23 @@
 package com.shatteredpixel.shatteredpixeldungeon.expanded;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
-import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.journal.DocumentPage;
-import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
-import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
-import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.AmbitiousImpRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndImp;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
-import com.watabou.utils.Random;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-
-public class BloodPactImp extends NPC {
+public class WanderingImp extends NPC {
 
 	{
-		spriteClass = ImpSprite.class;
+        // Credits for the sprite: @D3aht
+		spriteClass = WanderingImpSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}
@@ -74,7 +49,9 @@ public class BloodPactImp extends NPC {
 
     @Override
     public String description() {
-        return "Stop inspecting me and come talk to me.";
+        return  "An Imp like creature with many jewelry pieces around his body.\n" +
+                "His lapis lazuli cotton clothes shows how rich he is.\n" +
+                "One does not become this rich without stepping everyone he encounters.";
     }
 
 
@@ -120,7 +97,7 @@ public class BloodPactImp extends NPC {
 
 		if (!seenBefore && Dungeon.level.heroFOV[pos]) {
 			String heroName = Messages.titleCase(Dungeon.hero.name());
-			yell("I don't have much time, come closer " + heroName);
+			yell("Come closer " + heroName + ", maybe we can negotiate.");
 			seenBefore = true;
 		}
 
@@ -131,7 +108,7 @@ public class BloodPactImp extends NPC {
 
 	@Override
 	public String name(){
-		return "Ambitious Imp";
+		return "Wandering Imp";
 	}
 
 
@@ -160,17 +137,16 @@ public class BloodPactImp extends NPC {
 		sprite.turnTo( pos, Dungeon.hero.pos );
 
 		String text =
-				"What?! you're not crazy!\n" +
-				"Not like the rest of the creatures here...\n" +
+				"A not crazy human, not a easy find.\n" +
 				"\n"+
-				"Would you like to enjoy my wares? ;)\n" +
-				"Oh no, I don't want your gold, not yet. I want something else.\n" +
-				"\n"+
-				"I want your soul >:)\n" +
+				"Would you like to enjoy my wares?\n" +
+				"Oh no, I don't want your gold,\n" +
+                "i want something else, I want your soul >:)\n" +
+                "\n"+
 				"Not all of it, just a piece, or whatever you're willing to offer me.\n" +
 				"In exchange, you can keep some of my goods.\n" +
 				"\n"+
-				"Don't take too long, because I have to leave very soon.";
+				"I have to leave very soon, so don't leave this floor unless you're done here.";
 
 		tell(text);
 		return true;
@@ -180,7 +156,7 @@ public class BloodPactImp extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( BloodPactImp.this, text ));
+				GameScene.show( new WndQuest( WanderingImp.this, text ));
 			}
 		});
 	}

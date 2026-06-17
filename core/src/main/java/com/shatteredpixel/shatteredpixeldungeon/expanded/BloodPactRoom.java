@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.expanded;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -102,7 +101,7 @@ public class BloodPactRoom extends SpecialRoom {
 
 		int pos = level.pointToCell(center());
 
-		Mob imp = new BloodPactImp();
+		Mob imp = new WanderingImp();
 		imp.pos = pos;
 		level.mobs.add( imp );
 
