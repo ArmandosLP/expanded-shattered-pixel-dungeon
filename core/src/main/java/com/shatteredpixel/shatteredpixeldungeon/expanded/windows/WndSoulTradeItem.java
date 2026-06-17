@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.SoulPact;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CurrencyIndicator;
@@ -51,14 +52,15 @@ public class WndSoulTradeItem extends WndInfoItem {
 		super(heap);
 
 		selling = false;
-//		CurrencyIndicator.showGold = true;
 
 		Item item = heap.peek();
 
 		float pos = height;
 
 		// Armandos FIXME Only in English for now
-		RedButton btnBuy = new RedButton( "Pact for " + item.soulValue() + " Soul"){
+
+        int price = item.soulValue();
+		RedButton btnBuy = new RedButton(Messages.get(this, "pact", price)){
 			@Override
 			protected void onClick() {
 				hide();
@@ -72,66 +74,6 @@ public class WndSoulTradeItem extends WndInfoItem {
 		add( btnBuy );
 
 		pos = btnBuy.bottom();
-
-		//final MasterThievesArmband.Thievery thievery = Dungeon.hero.buff(MasterThievesArmband.Thievery.class);
-		/*
-		if (thievery != null && !thievery.isCursed() && thievery.chargesToUse(item) > 0) {
-			final float chance = thievery.stealChance(item);
-			final int chargesToUse = thievery.chargesToUse(item);
-			RedButton btnSteal = new RedButton(Messages.get(this, "steal", Math.min(100, (int) (chance * 100)), chargesToUse), 6) {
-				@Override
-				protected void onClick() {
-					if (chance >= 1){
-						thievery.steal(item);
-						Hero hero = Dungeon.hero;
-						Item item = heap.pickUp();
-						hide();
-
-						if (!item.doPickUp(hero)) {
-							Dungeon.level.drop(item, heap.pos).sprite.drop();
-						}
-					} else {
-						GameScene.show(new WndOptions(new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND),
-								Messages.titleCase(Messages.get(MasterThievesArmband.class, "name")),
-								Messages.get(WndSoulTradeItem.class, "steal_warn"),
-								Messages.get(WndSoulTradeItem.class, "steal_warn_yes"),
-								Messages.get(WndSoulTradeItem.class, "steal_warn_no")){
-							@Override
-							protected void onSelect(int index) {
-								super.onSelect(index);
-								if (index == 0){
-									if (thievery.steal(item)) {
-										Hero hero = Dungeon.hero;
-										Item item = heap.pickUp();
-										WndSoulTradeItem.this.hide();
-
-										if (!item.doPickUp(hero)) {
-											Dungeon.level.drop(item, heap.pos).sprite.drop();
-										}
-									} else {
-										for (Mob mob : Dungeon.level.mobs) {
-											if (mob instanceof Shopkeeper) {
-												mob.yell(Messages.get(mob, "thief"));
-												((Shopkeeper) mob).flee();
-												break;
-											}
-										}
-										WndSoulTradeItem.this.hide();
-									}
-								}
-							}
-						});
-					}
-				}
-			};
-			btnSteal.setRect(0, pos + 1, width, BTN_HEIGHT);
-			btnSteal.icon(new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND));
-			add(btnSteal);
-
-			pos = btnSteal.bottom();
-
-		}
-		*/
 
 		resize(width, (int) pos);
 	}

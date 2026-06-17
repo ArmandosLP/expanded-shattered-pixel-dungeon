@@ -149,7 +149,10 @@ public abstract class RegularLevel extends Level {
 		// Expected 2 pact rooms per run
 		// Not getting a pact room in a run is extremely rare
 		int pactChance = Dungeon.LimitedDrops.BLOOD_PACT_CHANCE.count;
-        
+
+        initRooms.add(new BloodPactRoom());
+        addItemToSpawn(new IronKey(Dungeon.depth));
+
 		if (Random.Int(100) + 1 <= pactChance){
 			initRooms.add(new BloodPactRoom());
 			addItemToSpawn(new IronKey(Dungeon.depth));

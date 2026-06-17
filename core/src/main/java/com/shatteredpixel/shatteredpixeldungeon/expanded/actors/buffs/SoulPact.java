@@ -3,6 +3,7 @@ package com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -62,22 +63,9 @@ public class SoulPact extends Buff implements Hero.Doom {
 		level = bundle.getInt(LEVEL);
 	}
 
-
-	@Override
-	public String name() {
-		return "Soul pact";
-	}
-
-	@Override
-	public String desc() {
-		return
-				"You've made a deal with the Wandering Imp in exchange for goods.\n" +
-				"\n" +
-				"Soul pact reduces your maximum health by " + value() + ", but it can't reduce it below 1.\n" +
-				"\n" +
-				"This decision will stay with you until the end.\n" +
-				"Was it worth it?";
-	}
+    public String desc(){
+        return Messages.get(this, "desc", value());
+    }
 
 
 	@Override

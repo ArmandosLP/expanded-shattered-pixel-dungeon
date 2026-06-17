@@ -48,12 +48,12 @@ public class WanderingImp extends NPC {
 
 	static final private String SEEN_BEFORE = "SEEN_BEFORE";
 
-    @Override
-    public String description() {
-        return  "An Imp like creature with many jewelry pieces around his body.\n" +
-                "His lapis lazuli cotton clothes shows how rich he is.\n" +
-                "One does not become this rich without stepping everyone he encounters.";
-    }
+//    @Override
+//    public String description() {
+//        return  "An Imp like creature with many jewelry pieces around his body.\n" +
+//                "His lapis lazuli cotton clothes shows how rich he is.\n" +
+//                "One does not become this rich without stepping everyone he encounters.";
+//    }
 
 
 	public void restoreFromBundle( Bundle bundle ) {
@@ -107,10 +107,10 @@ public class WanderingImp extends NPC {
 
 	}
 
-	@Override
-	public String name(){
-		return "Wandering Imp";
-	}
+//	@Override
+//	public String name(){
+//		return "Wandering Imp";
+//	}
 
 
 	@Override
@@ -136,20 +136,10 @@ public class WanderingImp extends NPC {
 	@Override
 	public boolean interact(Char c) {
 		sprite.turnTo( pos, Dungeon.hero.pos );
-
-		String text =
-				"A not crazy human, not a easy find.\n" +
-				"\n"+
-				"Would you like to enjoy my wares?\n" +
-				"Oh no, I don't want your gold,\n" +
-                "i want something else, I want your soul >:)\n" +
-                "\n"+
-				"Not all of it, just a piece, or whatever you're willing to offer me.\n" +
-				"In exchange, you can keep some of my goods.\n" +
-				"\n"+
-				"I have to leave very soon, so don't leave this floor unless you're done here.";
-
-		tell(text);
+        tell(Messages.get(this,"interact"));
+//		String text =
+//				"A not crazy human, not a easy find.\n\nWould you like to enjoy my wares? Oh no, I don't want your gold, I want something else, I want your soul >:)\nNot all of it, just a piece, or whatever you're willing to offer me. In exchange, you can keep some of my goods.\n\nI have to leave very soon, so don't leave this floor unless you're done here.";
+//		tell(text);
 		return true;
 	}
 	
