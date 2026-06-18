@@ -313,7 +313,11 @@ public class MeleeWeapon extends Weapon {
 				if (STRReq() > Dungeon.hero.STR()) {
 					info += " " + Messages.get(Weapon.class, "too_heavy");
 				} else if (Dungeon.hero.STR() > STRReq()) {
-					info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
+                    if (this instanceof MorningStar){
+                        info += " " + Messages.get(MorningStar.class, "excess_str", ((Dungeon.hero.STR() - STRReq()) / 2), (Dungeon.hero.STR() - STRReq()) * 2);
+                    }else{
+                        info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
+                    }
 				}
 			}
 		} else {

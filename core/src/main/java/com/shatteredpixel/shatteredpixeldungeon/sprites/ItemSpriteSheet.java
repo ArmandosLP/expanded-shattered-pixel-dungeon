@@ -245,6 +245,11 @@ public class ItemSpriteSheet {
 	public static final int QUARTERSTAFF    = WEP_TIER2+3;
 	public static final int DIRK            = WEP_TIER2+4;
 	public static final int SICKLE          = WEP_TIER2+5;
+
+    // EXPANDED Expanded expanded mod
+    public static final int MORNING_STAR    = WEP_TIER2+6;
+
+
 	static{
 		assignItemRect(SHORTSWORD,      13, 13);
 		assignItemRect(HAND_AXE,        12, 14);
@@ -252,6 +257,7 @@ public class ItemSpriteSheet {
 		assignItemRect(QUARTERSTAFF,    16, 16);
 		assignItemRect(DIRK,            13, 14);
 		assignItemRect(SICKLE,          15, 15);
+        assignItemRect(MORNING_STAR,    15, 15);
 	}
 
 	private static final int WEP_TIER3      =                               xy(1, 8);   //8 slots
@@ -495,7 +501,7 @@ public class ItemSpriteSheet {
 
 	private static final int TRINKETS        =                               xy(1, 18);  //32 slots
 
-    // EXPANDED Expanded expanded
+    // EXPANDED Expanded expanded mod
     public static final int LUCKY_COIN       = TRINKETS+15+16;
 
 	public static final int RAT_SKULL       = TRINKETS+0;
