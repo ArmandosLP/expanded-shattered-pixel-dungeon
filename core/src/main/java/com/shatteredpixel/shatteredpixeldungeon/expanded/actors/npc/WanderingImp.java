@@ -48,14 +48,6 @@ public class WanderingImp extends NPC {
 
 	static final private String SEEN_BEFORE = "SEEN_BEFORE";
 
-//    @Override
-//    public String description() {
-//        return  "An Imp like creature with many jewelry pieces around his body.\n" +
-//                "His lapis lazuli cotton clothes shows how rich he is.\n" +
-//                "One does not become this rich without stepping everyone he encounters.";
-//    }
-
-
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
 		seenBefore = bundle.getBoolean( SEEN_BEFORE );
@@ -97,21 +89,15 @@ public class WanderingImp extends NPC {
 		}
 
 		if (!seenBefore && Dungeon.level.heroFOV[pos]) {
-			String heroName = Messages.titleCase(Dungeon.hero.name());
-			yell("Come closer " + heroName + ", maybe we can negotiate.");
+			yell(Messages.get(this, "yell", Messages.titleCase(Dungeon.hero.name())));
 			seenBefore = true;
+            sprite.turnTo( pos, Dungeon.hero.pos );
 		}
 
 		spend(TICK);
 		return super.act();
 
 	}
-
-//	@Override
-//	public String name(){
-//		return "Wandering Imp";
-//	}
-
 
 	@Override
 	public int defenseSkill( Char enemy ) {
@@ -137,9 +123,6 @@ public class WanderingImp extends NPC {
 	public boolean interact(Char c) {
 		sprite.turnTo( pos, Dungeon.hero.pos );
         tell(Messages.get(this,"interact"));
-//		String text =
-//				"A not crazy human, not a easy find.\n\nWould you like to enjoy my wares? Oh no, I don't want your gold, I want something else, I want your soul >:)\nNot all of it, just a piece, or whatever you're willing to offer me. In exchange, you can keep some of my goods.\n\nI have to leave very soon, so don't leave this floor unless you're done here.";
-//		tell(text);
 		return true;
 	}
 	

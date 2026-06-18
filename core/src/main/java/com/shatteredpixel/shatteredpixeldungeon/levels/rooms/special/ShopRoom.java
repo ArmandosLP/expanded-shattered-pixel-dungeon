@@ -161,7 +161,11 @@ public class ShopRoom extends SpecialRoom {
 
         itemsToSpawn.addAll(extraItemsToSpawn);
 
+        System.out.println("Point");
+
 		for (Item item : itemsToSpawn.toArray(new Item[0])) {
+
+            System.out.println("Bucle");
 
 			//place items in a clockwise pattern
 			if (curItemPlace.x == left+inset && curItemPlace.y != top+inset){
@@ -341,7 +345,9 @@ public class ShopRoom extends SpecialRoom {
         ArrayList<Item> extraItemsToSpawn = new ArrayList<>();
 
         for(int i = 0; i < LuckyCoin.extraShopItems(); i++){
-            extraItemsToSpawn.add(Random.element(itemsToSpawn));
+            Item item = Random.element(itemsToSpawn);
+            itemsToSpawn.remove(item);
+            extraItemsToSpawn.add(item);
         }
 
         return extraItemsToSpawn;
