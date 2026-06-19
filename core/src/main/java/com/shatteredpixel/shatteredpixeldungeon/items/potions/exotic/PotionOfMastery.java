@@ -51,6 +51,11 @@ public class PotionOfMastery extends ExoticPotion {
 
 	protected static boolean identifiedByUse = false;
 
+    @Override
+    public int soulValue(){
+        return 25;
+    }
+
 	@Override
 	//need to override drink so that time isn't spent right away
 	protected void drink(final Hero hero) {

@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.rooms.SoulPactRoom;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -305,6 +306,8 @@ public class Dungeon {
 		if (branch == 0) {
 			switch (depth) {
 				case 1:
+                    // Start run with a 1% pact chance
+                    SoulPactRoom.addPactChance(1);
 				case 2:
 				case 3:
 				case 4:
@@ -401,7 +404,15 @@ public class Dungeon {
 		
 		if (branch == 0) Statistics.qualifiedForNoKilling = !bossLevel();
 		Statistics.qualifiedForBossChallengeBadge = false;
-		
+
+        if (branch == 0 && depth > 4){
+            if (depth % 5 == 0){
+                SoulPactRoom.addPactChance(SoulPactRoom.BOSS_CHANCE_INCREASE);
+            }else{
+                SoulPactRoom.addPactChance(SoulPactRoom.REGULAR_CHANCE_INCREASE);
+            }
+        }
+
 		return level;
 	}
 	

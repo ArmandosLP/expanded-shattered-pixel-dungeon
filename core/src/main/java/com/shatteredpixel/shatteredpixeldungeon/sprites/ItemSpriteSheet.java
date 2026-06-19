@@ -48,7 +48,7 @@ public class ItemSpriteSheet {
 
 
     // EXPANDED Expanded expanded
-	public static final int BLOOD_DROP = xy(16,32) + 0;
+	public static final int PACT_ICON = xy(16,32);
 
 
 	private static final int PLACEHOLDERS   =                               xy(1, 1);   //18 slots

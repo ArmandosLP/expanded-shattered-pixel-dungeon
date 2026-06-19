@@ -69,7 +69,7 @@ public class WndSoulTradeItem extends WndInfoItem {
 		};
 
 		btnBuy.setRect( 0, pos + GAP, width, BTN_HEIGHT );
-		btnBuy.icon(new ItemSprite(ItemSpriteSheet.BLOOD_DROP));
+		btnBuy.icon(new ItemSprite(ItemSpriteSheet.PACT_ICON));
 		btnBuy.enable( true );
 		add( btnBuy );
 

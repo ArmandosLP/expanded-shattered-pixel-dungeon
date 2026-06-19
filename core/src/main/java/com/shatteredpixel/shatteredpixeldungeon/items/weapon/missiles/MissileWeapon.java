@@ -695,13 +695,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	@Override
 	public int soulValue() {
-		int price = super.soulValue();
-		// +2 per tier, starting from tier 2
-		price += (2 * (tier - 1));
-		// +6 per level
-		price += (6 * level());
-
-		return price;
+        return 10 + ((Dungeon.depth / 5) * 5) + (tier * 2);
 	}
 
 	@Override

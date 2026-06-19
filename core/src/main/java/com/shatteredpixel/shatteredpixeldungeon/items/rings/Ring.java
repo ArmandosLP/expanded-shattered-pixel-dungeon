@@ -291,10 +291,7 @@ public class Ring extends KindofMisc {
 
 	@Override
 	public int soulValue() {
-		int price = 15;
-
-		price += (level() * 5);
-		return price;
+		return 15 + (Dungeon.depth / 5) * 5;
 	}
 
 	@Override

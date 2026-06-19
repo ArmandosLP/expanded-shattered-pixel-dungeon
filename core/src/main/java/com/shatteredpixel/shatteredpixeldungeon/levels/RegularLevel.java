@@ -37,7 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.rooms.BloodPactRoom;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.rooms.SoulPactRoom;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -145,20 +145,11 @@ public abstract class RegularLevel extends Level {
 		if (Dungeon.shopOnLevel())
 			initRooms.add(new ShopRoom());
 
-		// ExpandedMod Pact chance
-		// Expected 2 pact rooms per run
-		// Not getting a pact room in a run is extremely rare
-		int pactChance = Dungeon.LimitedDrops.BLOOD_PACT_CHANCE.count;
-
-		if (Random.Int(100) + 1 <= pactChance){
-			initRooms.add(new BloodPactRoom());
-			addItemToSpawn(new IronKey(Dungeon.depth));
-			pactChance = Math.max(0, pactChance - 30);
-		}else{
-			pactChance += 3;
-		}
-
-		Dungeon.LimitedDrops.BLOOD_PACT_CHANCE.count = pactChance;
+        SoulPactRoom spr = SoulPactRoom.pactForFloor(Dungeon.depth);
+        if (spr != null){
+            initRooms.add(spr);
+            addItemToSpawn(new IronKey(Dungeon.depth));
+        }
 
 		//force max special rooms and add one more for large levels
 		int specials = specialRooms(feeling == Feeling.LARGE);

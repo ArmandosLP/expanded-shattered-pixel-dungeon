@@ -574,10 +574,7 @@ public abstract class Wand extends Item {
 
 	@Override
 	public int soulValue() {
-		int price = 20;
-		// +5 per level
-		price += (level() * 5);
-		return price;
+        return 20 + ((Dungeon.depth / 5) * 5);
 	}
 
 	@Override

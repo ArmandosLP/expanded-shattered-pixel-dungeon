@@ -21,18 +21,16 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.expanded.rooms;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.npc.WanderingImp;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfMastery;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -42,11 +40,14 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class BloodPactRoom extends SpecialRoom {
+public class SoulPactRoom extends SpecialRoom {
 
 	protected ArrayList<Item> itemsToSpawn;
-	static private int MAX_PACT_AMOUNT = 8;
-	static public int MIN_PACT_AMOUNT = 4;
+	static private final int MAX_PACT_AMOUNT = 7;
+	static public final int MIN_PACT_AMOUNT = 4;
+    static public final int REGULAR_CHANCE_INCREASE = 2;
+    static public final int BOSS_CHANCE_INCREASE = 4;
+    static public final int CHANCE_REDUCTION = 100;
 
 	@Override
 	public int minWidth() {
@@ -148,56 +149,59 @@ public class BloodPactRoom extends SpecialRoom {
 	}
 	
 	protected static ArrayList<Item> generateItems() {
-		ArrayList<Item> itemsToSpawn = new ArrayList<>();
+        // We generate all the possible prizes and randomly take 4 of them.
+        ArrayList<Item> possiblePrizes = new ArrayList<>();
 
-		for (int i = 0; i < MIN_PACT_AMOUNT; i++){
-			if (i >= MAX_PACT_AMOUNT) break;
+        possiblePrizes.add(Generator.random(Generator.Category.WAND));
+        possiblePrizes.add(Generator.random(Generator.Category.RING));
+        possiblePrizes.add(Generator.random(Generator.Category.WEAPON));
+        possiblePrizes.add(Generator.random(Generator.Category.ARMOR));
+        possiblePrizes.add(Generator.random(Generator.Category.MISSILE));
+        possiblePrizes.add(new ScrollOfEnchantment());
+        possiblePrizes.add(new PotionOfMastery());
 
-			Item prize;
+        ArrayList<Item> itemsToSpawn = new ArrayList<>();
 
-			switch (Random.chances(new float[]{2, 2, 2, 2, 2, 1, 1, 2, 2})){
-				default:
-				case 0:
-					prize = Generator.random(Generator.Category.WAND); break;
-				case 1:
-					prize = Generator.random(Generator.Category.RING); break;
-				case 2:
-					prize = Generator.random(Generator.Category.WEAPON); break;
-				case 3:
-					prize = Generator.random(Generator.Category.ARMOR); break;
-				case 4:
-					prize = Generator.random(Generator.Category.MISSILE); break;
-				case 5:
-					prize = new ScrollOfUpgrade(); break;
-				case 6:
-					prize =  new PotionOfStrength(); break;
-				case 7:
-					prize =  new PotionOfExperience(); break;
-				case 8:
-					prize =  new ScrollOfTransmutation(); break;
-			}
+        for(int i = 0; i < MIN_PACT_AMOUNT; i++){
+            if (possiblePrizes.isEmpty() || itemsToSpawn.size() >= MAX_PACT_AMOUNT) break;
 
-			if (!(prize instanceof Potion) && !(prize instanceof Scroll)){
-				switch (Random.chances(new float[]{1, 1, 1})){
-					case 0:
-						break;
-					case 1:
-						prize.level(prize.level() + 1);
-						break;
-					case 2:
-						prize.level(prize.level() + 2);
-						break;
-				}
+            Item prize = Random.element(possiblePrizes);
+            possiblePrizes.remove(prize);
+            itemsToSpawn.add(prize);
 
-				prize.levelKnown = true;
+            if (prize.isUpgradable()){
+                int level = 1; // +1: 100%
+                level += Random.Int(2); // Extra +1: 50%
 
-			}
-
-			itemsToSpawn.add(prize);
-		}
-
-		return itemsToSpawn;
-
+                while (Random.Int(5) == 0){
+                    level += 1; // Theoretically infinite upgrades, chances of getting a +5 item are 1 in 250
+                }
+                prize.level(level);
+            }
+        }
+        return itemsToSpawn;
 	}
+
+    public static SoulPactRoom pactForFloor(int depth){
+        if (depth <= 4){
+            // 1% chance for pact in the sewers
+            if (Random.Int(100) == 0) return new SoulPactRoom();
+            return null;
+        }else{
+            int pactChance = Dungeon.LimitedDrops.BLOOD_PACT_CHANCE.count;
+
+            if (Random.Int(100) + 1 <= pactChance){
+                addPactChance(-CHANCE_REDUCTION);
+                return new SoulPactRoom();
+            }
+            return null;
+        }
+    }
+
+    public static void addPactChance(int value){
+        int pactChance = Dungeon.LimitedDrops.BLOOD_PACT_CHANCE.count;
+        pactChance = Math.max(0, pactChance + value);
+        Dungeon.LimitedDrops.BLOOD_PACT_CHANCE.count = pactChance;
+    }
 
 }

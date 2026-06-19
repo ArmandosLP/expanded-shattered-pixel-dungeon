@@ -167,11 +167,6 @@ public class ScrollOfUpgrade extends InventoryScroll {
 	}
 
 	@Override
-	public int soulValue() {
-		return super.soulValue() * 5;
-	}
-
-	@Override
 	public int energyVal() {
 		return isKnown() ? 10 * quantity : super.energyVal();
 	}

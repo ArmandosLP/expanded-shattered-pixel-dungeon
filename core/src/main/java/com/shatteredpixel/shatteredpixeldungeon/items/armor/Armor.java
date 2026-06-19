@@ -712,13 +712,7 @@ public class Armor extends EquipableItem {
 
 	@Override
 	public int soulValue() {
-		int price = super.soulValue();
-		// +3 per tier, starting from tier 2
-		price += (3 * (tier - 1));
-		// +8 per level
-		price += (8 * level());
-
-		return price;
+		return 10 + ((Dungeon.depth / 5) * 5) + (tier * 2);
 	}
 
 	@Override

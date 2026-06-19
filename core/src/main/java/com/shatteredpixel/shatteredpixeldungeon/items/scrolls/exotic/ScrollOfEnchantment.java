@@ -53,7 +53,12 @@ public class ScrollOfEnchantment extends ExoticScroll {
 	}
 
 	protected static boolean identifiedByUse = false;
-	
+
+    @Override
+    public int soulValue(){
+        return 25;
+    }
+
 	@Override
 	public void doRead() {
 		if (!isKnown()) {
