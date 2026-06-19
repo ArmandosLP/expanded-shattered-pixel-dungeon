@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.armor.glyphs.Vitality;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
@@ -53,6 +54,7 @@ public class ArmoredStatue extends Statue {
 		armor = Generator.randomArmor();
 		armor.cursed = false;
 		armor.inscribe(Armor.Glyph.random());
+        HP = HT += Vitality.boostFactor(glyphLevel(Vitality.class));
 	}
 
 	private static final String ARMOR	= "armor";
