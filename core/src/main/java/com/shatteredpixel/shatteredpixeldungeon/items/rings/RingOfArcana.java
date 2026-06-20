@@ -66,9 +66,14 @@ public class RingOfArcana extends Ring {
 	public class Arcana extends RingBuff {
 	}
 
-    public void activate( Char ch ) {
-        super.activate(ch);
-        if (Dungeon.hero.glyphLevel(Vitality.class) >= 0) Dungeon.hero.updateHT(false);
+    @Override
+    public boolean doEquip( Hero hero ) {
+        if (super.doEquip(hero)){
+            if (hero.glyphLevel(Vitality.class) >= 0)
+                hero.updateHT(false);
+            return true;
+        }
+        return false;
     }
 
     @Override
