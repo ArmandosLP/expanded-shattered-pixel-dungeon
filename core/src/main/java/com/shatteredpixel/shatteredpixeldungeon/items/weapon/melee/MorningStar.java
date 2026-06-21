@@ -67,12 +67,14 @@ public class MorningStar extends MeleeWeapon {
 
     @Override
     public int damageRoll(Char owner) {
-        int damage = super.damageRoll( owner );
+        if (owner instanceof Hero) {
+            int damage = super.damageRoll( owner );
 
-        // super.damageRoll already has an 0 - exStr damage boost, we add an extra to that
-        int exStr = ((Hero)owner).STR() - STRReq();
-
-        return damage + Hero.heroDamageIntRange( (exStr / 2), exStr );
+            // super.damageRoll already has an 0 - exStr damage boost, we add an extra to that
+            int exStr = ((Hero)owner).STR() - STRReq();
+            return damage + Hero.heroDamageIntRange( (exStr / 2), exStr );
+        }
+        return super.damageRoll( owner );
     }
 
     // This is a bad idea. Too overpowered.
