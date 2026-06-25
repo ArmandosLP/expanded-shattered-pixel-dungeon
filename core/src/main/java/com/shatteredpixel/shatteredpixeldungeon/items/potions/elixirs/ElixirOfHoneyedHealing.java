@@ -30,10 +30,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bee;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Honey;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
+
+import java.util.ArrayList;
 
 public class ElixirOfHoneyedHealing extends Elixir {
 	
@@ -79,8 +83,38 @@ public class ElixirOfHoneyedHealing extends Elixir {
 	}
 
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
-		
-		{
+
+        @Override
+        public Item brew(ArrayList<Item> ingredients) {
+            if (!testIngredients(ingredients)) return null;
+
+            for (Item ingredient : ingredients){
+                ingredient.quantity(ingredient.quantity() - 1);
+            }
+
+            return sampleOutput(null);
+        }
+
+        @Override
+        public boolean testIngredients(ArrayList<Item> ingredients) {
+            boolean honey = false;
+            boolean healing = false;
+
+            for (Item ingredient : ingredients){
+
+                if (ingredient.quantity() > 0) {
+                    if (ingredient instanceof Honey || ingredient instanceof Honeypot.ShatteredPot) {
+                        honey = true;
+                    } else if (ingredient instanceof PotionOfHealing && ingredient.isIdentified()) {
+                        healing = true;
+                    }
+                }
+            }
+
+            return healing && honey;
+        }
+
+        {
 			inputs =  new Class[]{PotionOfHealing.class, Honeypot.ShatteredPot.class};
 			inQuantity = new int[]{1, 1};
 			

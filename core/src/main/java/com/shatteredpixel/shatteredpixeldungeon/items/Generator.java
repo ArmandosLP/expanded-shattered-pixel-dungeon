@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.GoldenRation;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Bun;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.DriedMeat;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.GoldenBerry;
@@ -756,6 +757,10 @@ public class Generator {
 
                 if (WoodenSpoon.foodEffectAmplifier() != -1 && WoodenSpoon.foodToVariant.containsKey(itemCls)){
                     itemCls = Random.element(WoodenSpoon.foodToVariant.get(itemCls));
+                }
+
+                if (itemCls == Food.class && Random.Float() < LuckyCoin.goldenFoodChance()){
+                    itemCls = GoldenRation.class;
                 }
 
 				if (cat.defaultProbs != null && cat.seed != null){

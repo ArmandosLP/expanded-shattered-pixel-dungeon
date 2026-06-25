@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.GoldenRation;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Bun;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.DriedMeat;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.GoldenBerry;
@@ -278,7 +279,7 @@ public enum Catalog {
 				CorpseDust.class, Embers.class, CeremonialCandle.class, DarkGold.class, DwarfToken.class,
 				GooBlob.class, TengusMask.class, MetalShard.class, KingsCrown.class,
 				LiquidMetal.class, ArcaneResin.class,
-				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class);
+				SealShard.class, BrokenStaff.class, CloakScrap.class, BowFragment.class, BrokenHilt.class, TornPage.class, GoldenRation.class);
 
 	}
 

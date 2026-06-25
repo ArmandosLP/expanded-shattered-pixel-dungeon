@@ -26,7 +26,10 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Bun;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Honey;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.LuckyCoin;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -298,8 +301,13 @@ public class ShopRoom extends SpecialRoom {
                     Generator.randomUsingDefaults( Generator.Category.POTION ) :
                     Generator.randomUsingDefaults( Generator.Category.SCROLL ) );
 
-        itemsToSpawn.add( new SmallRation() );
-        itemsToSpawn.add( new SmallRation() );
+        if (WoodenSpoon.foodEffectAmplifier() == -1){
+            itemsToSpawn.add( new SmallRation() );
+            itemsToSpawn.add( new SmallRation() );
+        }else{
+            itemsToSpawn.add( new Bun() );
+            itemsToSpawn.add( new Honey() );
+        }
 
         switch (Random.Int(4)){
             case 0:
@@ -416,9 +424,13 @@ public class ShopRoom extends SpecialRoom {
 					Generator.randomUsingDefaults( Generator.Category.POTION ) :
 					Generator.randomUsingDefaults( Generator.Category.SCROLL ) );
 
-
-		itemsToSpawn.add( new SmallRation() );
-		itemsToSpawn.add( new SmallRation() );
+        if (WoodenSpoon.foodEffectAmplifier() == -1){
+            itemsToSpawn.add( new SmallRation() );
+            itemsToSpawn.add( new SmallRation() );
+        }else{
+            itemsToSpawn.add( new Bun() );
+            itemsToSpawn.add( new Honey() );
+        }
 		
 		switch (Random.Int(4)){
 			case 0:

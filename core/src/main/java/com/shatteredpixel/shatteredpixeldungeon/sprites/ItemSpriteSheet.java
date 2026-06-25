@@ -80,6 +80,13 @@ public class ItemSpriteSheet {
         assignItemRect(PACT_ICON,      9, 13);
     }
 
+    // ---- MISC --- //
+    public static final int GOLDEN_RATION = xy(1,40);   //18 slots
+
+    static {
+        assignItemRect(GOLDEN_RATION, 16, 12);
+    }
+
     // ---- FOOD --- //
     private static final int XP_FOOD   = xy(1, 36);
     public static final int PASTA           = XP_FOOD + 0;

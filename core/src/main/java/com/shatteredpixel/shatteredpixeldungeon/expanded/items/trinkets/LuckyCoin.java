@@ -43,11 +43,17 @@ public class LuckyCoin extends Trinket {
                     Messages.decimalFormat(
                             "#.##",
                             100 * (goldMultiplier(buffedLvl()) - 1f)),
+                    Messages.decimalFormat(
+                            "#.##",
+                            100 * (goldMultiplier(buffedLvl()) - 1f)),
                     extraShopItems(buffedLvl()));
         } else {
             return Messages.get(
                     this,
                     "typical_stats_desc",
+                    Messages.decimalFormat(
+                            "#.##",
+                            100 * (goldMultiplier(0) - 1f)),
                     Messages.decimalFormat(
                             "#.##",
                             100 * (goldMultiplier(0) - 1f)),
@@ -69,6 +75,10 @@ public class LuckyCoin extends Trinket {
         return extraShopItems(trinketLevel(LuckyCoin.class));
     }
 
+    public static float goldenFoodChance(){
+        return goldenFoodChance(trinketLevel(LuckyCoin.class));
+    }
+
     public static float goldMultiplier( int level ){
         if (level == -1){
             return 1f;
@@ -82,6 +92,14 @@ public class LuckyCoin extends Trinket {
             return 0;
         } else {
             return 2 + 2*level;
+        }
+    }
+
+    public static float goldenFoodChance( int level ){
+        if (level == -1){
+            return 0f;
+        } else {
+            return 0.1f + 0.05f*level;
         }
     }
 }
