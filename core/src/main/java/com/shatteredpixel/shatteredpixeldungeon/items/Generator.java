@@ -22,7 +22,20 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Bun;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.DriedMeat;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.GoldenBerry;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Gruel;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Honey;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.HuntersSandwich;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Pasta;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Ribs;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.SurvivalRation;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.TarteDeBry;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.LuckyCoin;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClericArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
@@ -540,8 +553,22 @@ public class Generator {
 			FOOD.classes = new Class<?>[]{
 					Food.class,
 					Pasty.class,
-					MysteryMeat.class };
-			FOOD.defaultProbs = new float[]{ 4, 1, 0 };
+					MysteryMeat.class,
+                    // Wooden spoon food. Expanded mod
+                    Ribs.class,
+                    DriedMeat.class,
+                    Bun.class,
+                    Honey.class,
+                    WheatBread.class,
+                    RyeBread.class,
+                    Pasta.class,
+                    Gruel.class,
+                    TarteDeBry.class,
+                    HuntersSandwich.class,
+                    GoldenBerry.class,
+                    SurvivalRation.class
+            };
+			FOOD.defaultProbs = new float[]{ 4, 1, 0,0,0,0,0,0,0,0,0,0,0,0,0 };
 			FOOD.probs = FOOD.defaultProbs.clone();
 			
 			RING.classes = new Class<?>[]{
@@ -599,9 +626,10 @@ public class Generator {
 					FerretTuft.class,
 					CrackedSpyglass.class,
                     // Expanded mod
+                    WoodenSpoon.class,
                     LuckyCoin.class
 			};
-			TRINKET.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+			TRINKET.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 			TRINKET.probs = TRINKET.defaultProbs.clone();
 
 			for (Category cat : Category.values()){
@@ -725,6 +753,10 @@ public class Generator {
 				}
 				if (cat.defaultProbs != null) cat.probs[i]--;
 				Class<?> itemCls = cat.classes[i];
+
+                if (WoodenSpoon.foodEffectAmplifier() != -1 && WoodenSpoon.foodToVariant.containsKey(itemCls)){
+                    itemCls = Random.element(WoodenSpoon.foodToVariant.get(itemCls));
+                }
 
 				if (cat.defaultProbs != null && cat.seed != null){
 					Random.popGenerator();

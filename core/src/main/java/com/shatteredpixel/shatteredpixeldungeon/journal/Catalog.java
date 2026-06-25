@@ -23,6 +23,18 @@ package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Bun;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.DriedMeat;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.GoldenBerry;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Gruel;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Honey;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.HuntersSandwich;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Pasta;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Ribs;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.SurvivalRation;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.TarteDeBry;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.ArcaneResin;
@@ -233,7 +245,14 @@ public enum Catalog {
 
 		FOOD.addItems( Food.class, Pasty.class, MysteryMeat.class, ChargrilledMeat.class,
 				StewedMeat.class, FrozenCarpaccio.class, SmallRation.class, Berry.class,
-				SupplyRation.class, Blandfruit.class, PhantomMeat.class, MeatPie.class );
+				SupplyRation.class, Blandfruit.class, PhantomMeat.class, MeatPie.class,
+                // Wooden spoon foods. Expanded mod
+                Ribs.class, DriedMeat.class,
+                Bun.class, Honey.class,
+                WheatBread.class, RyeBread.class,
+                Pasta.class, Gruel.class,
+                TarteDeBry.class, HuntersSandwich.class,
+                GoldenBerry.class, SurvivalRation.class);
 
 		EXOTIC_POTIONS.addItems(ExoticPotion.exoToReg.keySet().toArray(new Class[0]));
 

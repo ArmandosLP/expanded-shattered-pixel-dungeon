@@ -27,6 +27,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.DriedMeat;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Ribs;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -74,6 +77,11 @@ public class FrozenCarpaccio extends Food {
 	}
 	
 	public static Food cook( MysteryMeat ingredient ) {
+        if (WoodenSpoon.foodEffectAmplifier() != -1){
+            DriedMeat result = new DriedMeat();
+            result.quantity(ingredient.quantity());
+            return result;
+        }
 		FrozenCarpaccio result = new FrozenCarpaccio();
 		result.quantity = ingredient.quantity();
 		return result;

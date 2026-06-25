@@ -74,6 +74,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WellFed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -99,6 +100,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -731,6 +734,21 @@ public abstract class Char extends Actor {
 		if (armor != null) {
 			damage = armor.absorb( damage );
 		}
+
+        WellFed wellFed = buff(WellFed.class);
+        if (wellFed != null){
+            damage = Math.max(0,damage - wellFed.tarteDeBryBuff);
+        }
+
+        WheatBread.CarbohydrateRush carbRush = buff(WheatBread.CarbohydrateRush.class);
+        if (carbRush != null){
+            damage = carbRush.absorb( damage );
+        }
+
+        RyeBread.CarbohydrateRush carboRush = buff( RyeBread.CarbohydrateRush.class );
+        if (carboRush != null) {
+            damage = carboRush.absorb( damage );
+        }
 
 		ShieldOfLight.ShieldOfLightTracker shield = buff( ShieldOfLight.ShieldOfLightTracker.class);
 		if (shield != null && shield.object == enemy.id()){

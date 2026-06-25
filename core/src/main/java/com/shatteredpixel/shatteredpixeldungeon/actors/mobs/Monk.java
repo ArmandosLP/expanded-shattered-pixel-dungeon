@@ -25,6 +25,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MonkSprite;
@@ -33,6 +35,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
+import com.watabou.utils.Reflection;
 
 public class Monk extends Mob {
 	
@@ -50,7 +53,15 @@ public class Monk extends Mob {
 
 		properties.add(Property.UNDEAD);
 	}
-	
+
+    @Override
+    public Item createLoot() {
+        if (WoodenSpoon.foodEffectAmplifier() != -1 && WoodenSpoon.foodToVariant.containsKey(loot)){
+            Class<?> newItemCls = Random.element(WoodenSpoon.foodToVariant.get(loot));
+            return (Food) Reflection.newInstance(newItemCls);
+        }
+        return super.createLoot();
+    }
 	@Override
 	public int damageRoll() {
 		return Random.NormalIntRange( 12, 25 );

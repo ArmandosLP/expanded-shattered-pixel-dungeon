@@ -22,6 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Ribs;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public class ChargrilledMeat extends Food {
@@ -37,6 +39,11 @@ public class ChargrilledMeat extends Food {
 	}
 	
 	public static Food cook( int quantity ) {
+        if (WoodenSpoon.foodEffectAmplifier() != -1){
+            Ribs result = new Ribs();
+            result.quantity = quantity;
+            return result;
+        }
 		ChargrilledMeat result = new ChargrilledMeat();
 		result.quantity = quantity;
 		return result;

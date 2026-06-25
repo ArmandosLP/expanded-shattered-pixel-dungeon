@@ -29,7 +29,7 @@ public class ItemSpriteSheet {
 	public static final int SIZE = 16;
 
 	private static final int TX_WIDTH = 256;
-	private static final int TX_HEIGHT = 512;
+	private static final int TX_HEIGHT = 1024;
 
 	private static final int WIDTH = TX_WIDTH / SIZE;
 
@@ -46,10 +46,75 @@ public class ItemSpriteSheet {
 		film.add( item, x, y, x+width, y+height);
 	}
 
+    // ----------------------------------- EXPANDED CONTENT ----------------------------------- //
+    public static final int XP_PLACEHOLDERS = xy(1, 34);   //18 slots
+    public static final int PIE_PLACEHOLDERS = XP_PLACEHOLDERS + 1;
 
-    // EXPANDED Expanded expanded
-	public static final int PACT_ICON = xy(16,32);
+    static{
+        assignItemRect(XP_PLACEHOLDERS,      8, 13);
+        assignItemRect(PIE_PLACEHOLDERS,    16, 11);
+    }
 
+    // ---- WEAPONS --- //
+    private static final int XP_WEP   = xy(1, 37);   //18 slots
+    public static final int MORNING_STAR    = XP_WEP + 0;
+
+    static{
+        assignItemRect(MORNING_STAR,    15, 15);
+    }
+
+    // ---- TRINKETS --- //
+    private static final int XP_TRINKETS   = xy(1, 35);
+    public static final int LUCKY_COIN      = XP_TRINKETS+0;
+    public static final int WOODEN_SPOON    = XP_TRINKETS+1;
+
+    static{
+        assignItemRect(LUCKY_COIN,      13, 13);
+        assignItemRect(WOODEN_SPOON,    14, 14);
+    }
+
+    // ---- ICONS --- //
+    public static final int PACT_ICON = xy(1,41);
+
+    static{
+        assignItemRect(PACT_ICON,      9, 13);
+    }
+
+    // ---- FOOD --- //
+    private static final int XP_FOOD   = xy(1, 36);
+    public static final int PASTA           = XP_FOOD + 0;
+    public static final int GRUEL           = XP_FOOD + 1;
+
+    public static final int RIBS            = XP_FOOD + 2;
+    public static final int DRIED_MEAT      = XP_FOOD + 3;
+
+    public static final int WHEAT_BREAD     = XP_FOOD + 4;
+    public static final int RYE_BREAD       = XP_FOOD + 5;
+
+    public static final int HONEY           = XP_FOOD + 6;
+    public static final int BUN             = XP_FOOD + 7;
+
+    public static final int HUNTER_SANDWICH = XP_FOOD + 8;
+    public static final int BRYMLENT_TART   = XP_FOOD + 9;
+
+    public static final int GOLDEN_BERRY    = XP_FOOD + 10;
+    public static final int SURVIVAL_RATION = XP_FOOD + 11;
+
+    static{
+        assignItemRect(PASTA,          16, 15);
+        assignItemRect(GRUEL,          16, 15);
+        assignItemRect(RIBS,           15, 14);
+        assignItemRect(DRIED_MEAT,     13, 9);
+        assignItemRect(WHEAT_BREAD,    16, 11);
+        assignItemRect(RYE_BREAD,      16, 10);
+        assignItemRect(HONEY,          12, 14);
+        assignItemRect(BUN,            14, 12);
+        assignItemRect(HUNTER_SANDWICH,15, 10);
+        assignItemRect(BRYMLENT_TART,  16, 11);
+        assignItemRect(GOLDEN_BERRY,    9, 11);
+        assignItemRect(SURVIVAL_RATION,14, 12);
+    }
+    // ----------------------------------- EXPANDED CONTENT ----------------------------------- //
 
 	private static final int PLACEHOLDERS   =                               xy(1, 1);   //18 slots
 	//SOMETHING is the default item sprite at position 0. May show up ingame if there are bugs.
@@ -246,9 +311,6 @@ public class ItemSpriteSheet {
 	public static final int DIRK            = WEP_TIER2+4;
 	public static final int SICKLE          = WEP_TIER2+5;
 
-    // EXPANDED Expanded expanded mod
-    public static final int MORNING_STAR    = WEP_TIER2+6;
-
 
 	static{
 		assignItemRect(SHORTSWORD,      13, 13);
@@ -257,7 +319,6 @@ public class ItemSpriteSheet {
 		assignItemRect(QUARTERSTAFF,    16, 16);
 		assignItemRect(DIRK,            13, 14);
 		assignItemRect(SICKLE,          15, 15);
-        assignItemRect(MORNING_STAR,    15, 15);
 	}
 
 	private static final int WEP_TIER3      =                               xy(1, 8);   //8 slots
@@ -500,10 +561,6 @@ public class ItemSpriteSheet {
 	}
 
 	private static final int TRINKETS        =                               xy(1, 18);  //32 slots
-
-    // EXPANDED Expanded expanded mod
-    public static final int LUCKY_COIN       = TRINKETS+15+16;
-
 	public static final int RAT_SKULL       = TRINKETS+0;
 	public static final int PARCHMENT_SCRAP = TRINKETS+1;
 	public static final int PETRIFIED_SEED  = TRINKETS+2;
@@ -522,8 +579,6 @@ public class ItemSpriteSheet {
 	public static final int FERRET_TUFT     = TRINKETS+15;
 	public static final int SPYGLASS        = TRINKETS+16;
 	static{
-        assignItemRect(LUCKY_COIN,      13, 13);
-
 		assignItemRect(RAT_SKULL,       16, 11);
 		assignItemRect(PARCHMENT_SCRAP, 10, 14);
 		assignItemRect(PETRIFIED_SEED,  10, 10);

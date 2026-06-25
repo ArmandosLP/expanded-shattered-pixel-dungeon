@@ -25,8 +25,17 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WellFed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.GoldenBerry;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.HuntersSandwich;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.TarteDeBry;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
@@ -60,7 +69,7 @@ public class MeatPie extends Food {
 				if (ingredient.quantity() > 0) {
 					if (ingredient instanceof Pasty || ingredient instanceof PhantomMeat) {
 						pasty = true;
-					} else if (ingredient.getClass() == Food.class) {
+					} else if (ingredient.getClass() == Food.class || ingredient instanceof WheatBread || ingredient instanceof RyeBread) {
 						ration = true;
 					} else if (ingredient instanceof MysteryMeat
 							|| ingredient instanceof StewedMeat
@@ -86,13 +95,37 @@ public class MeatPie extends Food {
 			for (Item ingredient : ingredients){
 				ingredient.quantity(ingredient.quantity() - 1);
 			}
-			
+
+            if (WoodenSpoon.foodEffectAmplifier() != -1) {
+                if (Random.Int(2) == 0) return new HuntersSandwich();
+                return new TarteDeBry();
+            }
+
 			return sampleOutput(null);
 		}
 		
 		@Override
 		public Item sampleOutput(ArrayList<Item> ingredients) {
-			return new MeatPie();
+            if (WoodenSpoon.foodEffectAmplifier() != -1) return new PieHolder();
+            return new MeatPie();
 		}
+
+        public static class PieHolder extends Item {
+
+            {
+                image = ItemSpriteSheet.PIE_PLACEHOLDERS;
+            }
+
+            @Override
+            public String name() {
+                return Messages.get(WoodenSpoon.class,"pie_placeholder_name");
+            }
+
+            @Override
+            public String desc() {
+                return "";
+            }
+        }
+
 	}
 }

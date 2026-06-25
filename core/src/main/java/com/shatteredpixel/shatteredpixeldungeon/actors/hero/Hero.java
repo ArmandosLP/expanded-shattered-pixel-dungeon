@@ -64,6 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.TimeStasis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WellFed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.AscendedForm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist.Challenge;
@@ -85,6 +86,9 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.FoodHtBoost;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Frenzy;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Ferocity;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
@@ -267,6 +271,10 @@ public class Hero extends Char {
 		if (buff(ElixirOfMight.HTBoost.class) != null){
 			HT += buff(ElixirOfMight.HTBoost.class).boost();
 		}
+
+        if (buff(FoodHtBoost.class) != null){
+            HT += buff(FoodHtBoost.class).boost();
+        }
 
         HT += (int) (Vitality.boostFactor(glyphLevel(Vitality.class)) * RingOfArcana.enchantPowerMultiplier(this));
 
@@ -691,6 +699,23 @@ public class Hero extends Char {
 				dmg = ((Weapon)belongings.attackingWeapon()).augment.damageFactor(dmg);
 			}
 		}
+
+        WellFed wellFed = buff(WellFed.class);
+        if (wellFed != null){
+            dmg += wellFed.hunterSandwichBuff;
+        }
+
+        Ferocity ferocity = buff(Ferocity.class);
+        if (ferocity != null){
+            dmg = ferocity.proc(dmg); // Ferocity detaches itself when proc and left 0
+            Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 0.75f, 1.2f);
+        }
+
+        Frenzy frenzy = buff(Frenzy.class);
+        if (frenzy != null){
+            dmg = frenzy.proc(dmg); // Frenzy detaches itself when proc and left 0
+            Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 0.75f, 1.2f);
+        }
 
 		PhysicalEmpower emp = buff(PhysicalEmpower.class);
 		if (emp != null){

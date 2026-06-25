@@ -25,6 +25,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.HuntersSandwich;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.TarteDeBry;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.SaltCube;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -39,7 +42,9 @@ public class WellFed extends Buff {
 	}
 	
 	int left;
-	
+    public int hunterSandwichBuff;
+    public int tarteDeBryBuff;
+
 	@Override
 	public boolean act() {
 		left --;
@@ -62,7 +67,15 @@ public class WellFed extends Buff {
 		spend(TICK / SaltCube.hungerGainMultiplier());
 		return true;
 	}
-	
+
+    public void specialBuff(Food food, int level){
+        if (food instanceof HuntersSandwich) {
+            hunterSandwichBuff = level;
+        } else if (food instanceof TarteDeBry) {
+            tarteDeBryBuff = level;
+        }
+    }
+
 	public void reset(){
 		//heals one HP every 18 turns for 450 turns
 		//25 HP healed in total
@@ -79,7 +92,14 @@ public class WellFed extends Buff {
 	
 	@Override
 	public int icon() {
-		return BuffIndicator.WELL_FED;
+        if (hunterSandwichBuff > 0 && tarteDeBryBuff > 0){
+            return BuffIndicator.COMBO_WELL_FED;
+        }else if (hunterSandwichBuff > 0){
+            return BuffIndicator.HUNTER_WELL_FED;
+        }else if (tarteDeBryBuff > 0){
+            return BuffIndicator.BRY_WELL_FED;
+        }
+        return BuffIndicator.WELL_FED;
 	}
 
 	@Override
@@ -92,24 +112,39 @@ public class WellFed extends Buff {
 		int visualLeft = (int)(left / SaltCube.hungerGainMultiplier());
 		return Integer.toString(visualLeft+1);
 	}
-	
-	@Override
-	public String desc() {
-		int visualLeft = (int)(left / SaltCube.hungerGainMultiplier());
+
+    @Override
+    public String desc() {
+        int visualLeft = (int)(left / SaltCube.hungerGainMultiplier());
+
+        if (hunterSandwichBuff > 0 && tarteDeBryBuff > 0){
+            return Messages.get(this, "combo_desc",hunterSandwichBuff,tarteDeBryBuff,visualLeft + 1);
+        } else if (hunterSandwichBuff > 0) {
+            return Messages.get(this, "hunter_sandwich_desc",hunterSandwichBuff,visualLeft + 1);
+        } else if (tarteDeBryBuff > 0) {
+            return Messages.get(this, "hunter_sandwich_desc",tarteDeBryBuff,visualLeft + 1);
+        }
+
 		return Messages.get(this, "desc", visualLeft + 1);
 	}
 	
 	private static final String LEFT = "left";
+    private static final String HUNTER = "hunter_buff";
+    private static final String BRY = "bry_buff";
 	
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put(LEFT, left);
+		bundle.put(LEFT,   left);
+        bundle.put(HUNTER, hunterSandwichBuff);
+        bundle.put(BRY,    tarteDeBryBuff);
 	}
 	
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		left = bundle.getInt(LEFT);
+        hunterSandwichBuff = bundle.getInt(HUNTER);
+        tarteDeBryBuff     = bundle.getInt(BRY);
 	}
 }

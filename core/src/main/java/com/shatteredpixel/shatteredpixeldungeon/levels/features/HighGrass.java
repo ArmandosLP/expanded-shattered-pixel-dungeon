@@ -32,6 +32,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.GoldenBerry;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Camouflage;
@@ -106,7 +108,13 @@ public class HighGrass {
 
 						if (droppingBerry) {
 							dropped.countUp(1);
-							level.drop(new Berry(), pos).sprite.drop();
+
+                            if (WoodenSpoon.foodEffectAmplifier() == -1){
+                                level.drop(new Berry(), pos).sprite.drop();
+                            }else{
+                                level.drop(new GoldenBerry(), pos).sprite.drop();
+                            }
+
 						}
 					}
 

@@ -31,6 +31,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ShieldOfLight;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
@@ -97,6 +99,19 @@ public class Skeleton extends Mob {
 					damage = armor.absorb( damage );
 					damage -= (preDmg - damage); //apply the flat reduction twice
 				}
+
+                WheatBread.CarbohydrateRush wheatCarbRush = buff(WheatBread.CarbohydrateRush.class);
+                if (wheatCarbRush != null){
+                    // Static damage reduction, do not apply the reduction twice.
+                    damage = wheatCarbRush.absorb( damage );
+                }
+
+                RyeBread.CarbohydrateRush ryeCarboRush = buff( RyeBread.CarbohydrateRush.class );
+                if (damage > 0 && ryeCarboRush != null) {
+                    int preDmg = damage;
+                    damage = ryeCarboRush.absorb( damage );
+                    damage -= (preDmg - damage); //apply the flat reduction twice
+                }
 
 				if (ch.buff(MagicImmune.class) == null) {
 					ShieldOfLight.ShieldOfLightTracker shield = ch.buff(ShieldOfLight.ShieldOfLightTracker.class);

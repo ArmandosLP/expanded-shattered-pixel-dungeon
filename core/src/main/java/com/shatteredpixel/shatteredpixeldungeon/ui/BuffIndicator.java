@@ -44,14 +44,24 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 
 public class BuffIndicator extends Component {
-	
+
+    // ----------------------------------- EXPANDED CONTENT ----------------------------------- //
+    public static final int FEROCITY = 119;
+    public static final int FRENZY = 120;
+    public static final int RYE_CARBOHYDRATE_RUSH = 121;
+    public static final int WHEAT_CARBOHYDRATE_RUSH = 122;
+    public static final int COMBO_WELL_FED = 123;
+    public static final int BRY_WELL_FED = 124;
+    public static final int HUNTER_WELL_FED = 125;
+    public static final int BLOOD_PACT = 126;
+
+    // ----------------------------------- EXPANDED CONTENT ----------------------------------- //
+
 	//transparent icon
 	public static final int NONE    = 127;
 
 	//FIXME this is becoming a mess, should do a big cleaning pass on all of these
 	//and think about tinting options
-
-	public static final int BLOOD_PACT = 126;
 
 	public static final int MIND_VISION = 0;
 	public static final int LEVITATION  = 1;

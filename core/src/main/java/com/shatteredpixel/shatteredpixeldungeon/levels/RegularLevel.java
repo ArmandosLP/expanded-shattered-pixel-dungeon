@@ -37,6 +37,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.SurvivalRation;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.rooms.SoulPactRoom;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -557,7 +559,11 @@ public abstract class RegularLevel extends Level {
 							map[cell] = Terrain.GRASS;
 							losBlocking[cell] = false;
 						}
-						drop(new SupplyRation(), cell).type = Heap.Type.CHEST;
+                        if (WoodenSpoon.foodEffectAmplifier() == -1) {
+                            drop(new SupplyRation(), cell).type = Heap.Type.CHEST;
+                        }else{
+                            drop(new SurvivalRation(), cell).type = Heap.Type.CHEST;
+                        }
 						dropped.countUp(2);
 					}
 				}

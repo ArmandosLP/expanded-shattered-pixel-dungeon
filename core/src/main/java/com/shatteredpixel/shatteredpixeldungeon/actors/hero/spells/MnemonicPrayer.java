@@ -49,6 +49,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.AscendedForm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Frenzy;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Ferocity;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfAquaticRejuvenation;
@@ -140,6 +144,8 @@ public class MnemonicPrayer extends TargetedClericSpell {
 					continue;
 				}
 
+                // Expanded mod: ¡WTF IS THIS EVAN!
+
 				//should consider some buffs that may be OP here, e.g. invuln
 				if (b instanceof FlavourBuff)           Buff.affect(ch, (Class<?extends FlavourBuff>)b.getClass(), extension);
 				else if (b instanceof AdrenalineSurge)  ((AdrenalineSurge) b).delay(extension);
@@ -156,6 +162,11 @@ public class MnemonicPrayer extends TargetedClericSpell {
 				else if (b instanceof ShieldBuff)               ((ShieldBuff) b).delay(extension);
 				else if (b instanceof Kinetic.ConservedDamage)  ((Kinetic.ConservedDamage) b).delay(extension);
 				else if (b instanceof Sungrass.Health)          ((Sungrass.Health) b).boost((int) extension);
+                // Expanded mod
+                else if (b instanceof WheatBread.CarbohydrateRush)  ((WheatBread.CarbohydrateRush) b).mnemonicBoost((int) extension);
+                else if (b instanceof RyeBread.CarbohydrateRush)    ((RyeBread.CarbohydrateRush) b).mnemonicBoost((int) extension);
+                else if (b instanceof Frenzy)                       ((Frenzy) b).mnemonicBoost((int) extension);
+                else if (b instanceof Ferocity)                         ((Ferocity) b).mnemonicBoost((int) extension);
 
 				b.mnemonicExtended = true;
 

@@ -303,7 +303,7 @@ public class Armor extends EquipableItem {
 	public void activate(Char ch) {
 		if (seal != null) Buff.affect(ch, BrokenSeal.WarriorShield.class).setArmor(this);
 
-        // Useful for vitality glyph and Decay curse
+        // Useful for vitality glyph
         if (ch instanceof Hero) ((Hero) ch).updateHT(false);
 	}
 

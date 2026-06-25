@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.ChargrilledMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
@@ -31,6 +32,8 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.plants.BlandfruitBush;
 import com.watabou.utils.Point;
+import com.watabou.utils.Random;
+import com.watabou.utils.Reflection;
 
 public class SecretLarderRoom extends SecretRoom {
 	
@@ -67,13 +70,23 @@ public class SecretLarderRoom extends SecretRoom {
 				food = new ChargrilledMeat();
 				extraFood -= (Hunger.STARVING - Hunger.HUNGRY);
 			}
+
+            //we use a separate RNG here so that variance due to things like wooden spoon
+            //does not affect levelgen
+            Random.pushGenerator(Random.Long());
+            if (WoodenSpoon.foodEffectAmplifier() != -1 && WoodenSpoon.foodToVariant.containsKey(food.getClass())){
+                Class<?> newItemCls = Random.element(WoodenSpoon.foodToVariant.get(food.getClass()));
+                food = (Food) Reflection.newInstance(newItemCls);
+            }
+            Random.popGenerator();
+
 			int foodPos;
 			do {
 				foodPos = level.pointToCell(random());
 			} while (level.map[foodPos] != Terrain.EMPTY_SP || level.heaps.get(foodPos) != null);
 			level.drop(food, foodPos);
 		}
-		
+
 		entrance().set(Door.Type.HIDDEN);
 	}
 	
