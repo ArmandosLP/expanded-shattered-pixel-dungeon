@@ -62,7 +62,7 @@ public class WanderingImp extends NPC {
 
 	@Override
 	public Notes.Landmark landmark() {
-		return Notes.Landmark.IMP;
+		return Notes.Landmark.WANDERING_IMP;
 	}
 
 	@Override

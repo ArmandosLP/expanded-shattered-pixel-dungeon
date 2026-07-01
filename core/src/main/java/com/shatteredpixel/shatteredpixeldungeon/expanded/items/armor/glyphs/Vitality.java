@@ -30,10 +30,11 @@ public class Vitality extends Armor.Glyph {
     public static final int BASE_BOOST = 5;
     public static final float LEVEL_BOOST = 1.5f;
 
-	private static ItemSprite.Glowing VIVIDRED = new ItemSprite.Glowing( 0xFF3D3D );
+	private static ItemSprite.Glowing VIVID_RED = new ItemSprite.Glowing( 0xFF3D3D );
 
 	@Override
 	public int proc(Armor armor, Char attacker, Char defender, int damage) {
+        // Does nothing here, see hero.updateHT()
 		return damage;
 	}
 
@@ -43,8 +44,6 @@ public class Vitality extends Armor.Glyph {
     }
 
 	@Override
-	public ItemSprite.Glowing glowing() {
-		return VIVIDRED;
-	}
+	public ItemSprite.Glowing glowing() {return VIVID_RED;}
 
 }

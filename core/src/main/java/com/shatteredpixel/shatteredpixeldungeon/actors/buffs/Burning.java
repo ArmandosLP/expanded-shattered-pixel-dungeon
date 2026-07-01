@@ -29,12 +29,15 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Ribs;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Brimstone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.ChargrilledMeat;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.FrozenCarpaccio;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
@@ -126,10 +129,16 @@ public class Burning extends Buff implements Hero.Doom {
 						Item toBurn = Random.element(burnable).detach(hero.belongings.backpack);
 						GLog.w( Messages.capitalize(Messages.get(this, "burnsup", toBurn.title())) );
 						if (toBurn instanceof MysteryMeat || toBurn instanceof FrozenCarpaccio){
-							ChargrilledMeat steak = new ChargrilledMeat();
-							if (!steak.collect( hero.belongings.backpack )) {
-								Dungeon.level.drop( steak, hero.pos ).sprite.drop();
+                            //ChargrilledMeat steak = new ChargrilledMeat();
+                            Food food;
+                            if (WoodenSpoon.foodEffectAmplifier() == -1) food = new ChargrilledMeat();
+                            else food = new Ribs();
+                            if (!food.collect( hero.belongings.backpack )) {
+								Dungeon.level.drop( food, hero.pos ).sprite.drop();
 							}
+//							if (!steak.collect( hero.belongings.backpack )) {
+//								Dungeon.level.drop( steak, hero.pos ).sprite.drop();
+//							}
 						}
 						Heap.burnFX( hero.pos );
 					}
@@ -148,7 +157,9 @@ public class Burning extends Buff implements Hero.Doom {
 					((Thief)target).item = null;
 				} else if (item instanceof MysteryMeat) {
 					target.sprite.emitter().burst( ElmoParticle.FACTORY, 6 );
-					((Thief)target).item = new ChargrilledMeat();
+                    if (WoodenSpoon.foodEffectAmplifier() == -1) ((Thief)target).item = new ChargrilledMeat();
+                    else ((Thief)target).item = new Ribs();
+//					((Thief)target).item = new ChargrilledMeat();
 				}
 
 			}

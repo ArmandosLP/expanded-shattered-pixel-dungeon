@@ -755,10 +755,10 @@ public class Generator {
 				if (cat.defaultProbs != null) cat.probs[i]--;
 				Class<?> itemCls = cat.classes[i];
 
+                // Player can't have both Lucky coin and wooden spoon, but if he can, this should be changed
                 if (WoodenSpoon.foodEffectAmplifier() != -1 && WoodenSpoon.foodToVariant.containsKey(itemCls)){
                     itemCls = Random.element(WoodenSpoon.foodToVariant.get(itemCls));
                 }
-
                 if (itemCls == Food.class && Random.Float() < LuckyCoin.goldenFoodChance()){
                     itemCls = GoldenRation.class;
                 }
@@ -795,6 +795,14 @@ public class Generator {
 			return ((Item) Reflection.newInstance(cat.classes[Random.chances(cat.defaultProbsTotal)])).random();
 		} else {
 			Class<?> itemCls = cat.classes[Random.chances(cat.defaultProbs)];
+
+            // Player can't have both Lucky coin and wooden spoon, but if he can, this should be changed
+            if (WoodenSpoon.foodEffectAmplifier() != -1 && WoodenSpoon.foodToVariant.containsKey(itemCls)){
+                itemCls = Random.element(WoodenSpoon.foodToVariant.get(itemCls));
+            }
+            if (itemCls == Food.class && Random.Float() < LuckyCoin.goldenFoodChance()){
+                itemCls = GoldenRation.class;
+            }
 
 			if (ExoticPotion.regToExo.containsKey(itemCls)){
 				if (Random.Float() < ExoticCrystals.consumableExoticChance()){

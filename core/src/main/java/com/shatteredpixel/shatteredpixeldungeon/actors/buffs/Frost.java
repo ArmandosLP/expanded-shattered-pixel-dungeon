@@ -25,7 +25,12 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.DriedMeat;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.Ribs;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.ChargrilledMeat;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.FrozenCarpaccio;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
@@ -75,10 +80,16 @@ public class Frost extends FlavourBuff {
 					if (toFreeze instanceof Potion){
 						((Potion) toFreeze).shatter(hero.pos);
 					} else if (toFreeze instanceof MysteryMeat){
-						FrozenCarpaccio carpaccio = new FrozenCarpaccio();
-						if (!carpaccio.collect( hero.belongings.backpack )) {
-							Dungeon.level.drop( carpaccio, target.pos ).sprite.drop();
-						}
+//						FrozenCarpaccio carpaccio = new FrozenCarpaccio();
+                        Food food;
+                        if (WoodenSpoon.foodEffectAmplifier() == -1) food = new FrozenCarpaccio();
+                        else food = new DriedMeat();
+                        if (!food.collect( hero.belongings.backpack )) {
+                            Dungeon.level.drop( food, hero.pos ).sprite.drop();
+                        }
+//						if (!carpaccio.collect( hero.belongings.backpack )) {
+//							Dungeon.level.drop( carpaccio, target.pos ).sprite.drop();
+//						}
 					}
 				}
 				
@@ -90,7 +101,9 @@ public class Frost extends FlavourBuff {
 					((Potion) ((Thief) target).item).shatter(target.pos);
 					((Thief) target).item = null;
 				} else if (item instanceof MysteryMeat){
-					((Thief) target).item = new FrozenCarpaccio();
+                    if (WoodenSpoon.foodEffectAmplifier() == -1) ((Thief)target).item = new FrozenCarpaccio();
+                    else ((Thief)target).item = new Ribs();
+//					((Thief) target).item = new FrozenCarpaccio();
 				}
 
 			}

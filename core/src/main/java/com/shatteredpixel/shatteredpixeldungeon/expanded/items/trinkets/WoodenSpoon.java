@@ -53,6 +53,8 @@ import java.util.Map;
 public class WoodenSpoon extends Trinket {
 
     {
+        // Credits for the sprite: Alan "El Buho"
+        // Including all the foods from the spoon
         image = ItemSpriteSheet.WOODEN_SPOON;
     }
 

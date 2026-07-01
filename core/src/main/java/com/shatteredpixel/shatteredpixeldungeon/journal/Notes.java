@@ -36,6 +36,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.ImpShopkeeper;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.RatKing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.npc.WanderingImp;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.sprites.WanderingImpSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -138,6 +140,7 @@ public class Notes {
 		WANDMAKER,
 		TROLL,
 		IMP,
+        WANDERING_IMP,
 
 		DEMON_SPAWNER;
 	}
@@ -206,6 +209,8 @@ public class Notes {
 					return new Image(new BlacksmithSprite());
 				case IMP:
 					return new Image(new ImpSprite());
+                case WANDERING_IMP:
+                    return new Image(new WanderingImpSprite());
 
 				case DEMON_SPAWNER:
 					return new Image(new SpawnerSprite());
@@ -261,6 +266,7 @@ public class Notes {
 				case WANDMAKER:     return Messages.get(Wandmaker.class, "desc");
 				case TROLL:         return Messages.get(Blacksmith.class, "desc");
 				case IMP:           return Messages.get(Imp.class, "desc");
+                case WANDERING_IMP: return Messages.get(WanderingImp.class, "desc");
 
 				case DEMON_SPAWNER: return Messages.get(DemonSpawner.class, "desc");
 			}
