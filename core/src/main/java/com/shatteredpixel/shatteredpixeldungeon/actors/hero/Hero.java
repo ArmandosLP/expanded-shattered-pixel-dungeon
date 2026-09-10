@@ -711,18 +711,6 @@ public class Hero extends Char {
             dmg += wellFed.hunterSandwichBuff;
         }
 
-        Ferocity ferocity = buff(Ferocity.class);
-        if (ferocity != null){
-            dmg = ferocity.proc(dmg); // Ferocity detaches itself when proc and left 0
-            Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 0.75f, 1.2f);
-        }
-
-        Frenzy frenzy = buff(Frenzy.class);
-        if (frenzy != null){
-            dmg = frenzy.proc(dmg); // Frenzy detaches itself when proc and left 0
-            Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 0.75f, 1.2f);
-        }
-
 		PhysicalEmpower emp = buff(PhysicalEmpower.class);
 		if (emp != null){
 			dmg += emp.dmgBoost;

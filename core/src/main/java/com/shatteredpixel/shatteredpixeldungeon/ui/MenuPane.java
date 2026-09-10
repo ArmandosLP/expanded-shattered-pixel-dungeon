@@ -26,6 +26,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.ExpandedChallenges;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.windows.WndExpandedChallenges;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -58,6 +60,10 @@ public class MenuPane extends Component {
 	private Image challengeIcon;
 	private BitmapText challengeText;
 	private Button challengeButton;
+
+    private Image expandedChallengeIcon;
+    private BitmapText expandedChallengeText;
+    private Button expandedChallengeButton;
 
 	private JournalButton btnJournal;
 	private MenuButton btnMenu;
@@ -141,6 +147,27 @@ public class MenuPane extends Component {
 			add(challengeButton);
 		}
 
+        if (ExpandedChallenges.activeChallenges() > 0){
+            expandedChallengeIcon = Icons.get(Icons.CHAL_COUNT);
+            add(expandedChallengeIcon);
+
+            expandedChallengeText = new BitmapText( Integer.toString( ExpandedChallenges.activeChallenges() ), PixelScene.pixelFont);
+            expandedChallengeText.hardlight( 0xCACFC2 );
+            expandedChallengeText.measure();
+            add( expandedChallengeText );
+
+            expandedChallengeButton = new Button(){
+                @Override
+                protected void onClick() {
+                    GameScene.show(new WndExpandedChallenges(Dungeon.expandedChallenges, false));
+                }
+
+                @Override
+                protected String hoverText() {return Messages.get(WndExpandedChallenges.class, "title");}
+            };
+            add(expandedChallengeButton);
+        }
+
 		btnJournal = new JournalButton();
 		add( btnJournal );
 
@@ -206,6 +233,21 @@ public class MenuPane extends Component {
 
 			challengeButton.setRect(challengeIcon.x, challengeIcon.y, challengeIcon.width(), challengeIcon.height() + challengeText.height());
 		}
+
+        if (expandedChallengeIcon != null){
+            expandedChallengeIcon.x = btnJournal.left() - 14 + (7 - expandedChallengeIcon.width())/2f - 0.1f;
+            if (challengeIcon != null){expandedChallengeIcon.x -= challengeButton.width();}
+
+            expandedChallengeIcon.y = depthIcon.y;
+            PixelScene.align(expandedChallengeIcon);
+
+            expandedChallengeText.scale.set(PixelScene.align(0.67f));
+            expandedChallengeText.x = expandedChallengeIcon.x + (expandedChallengeIcon.width() - expandedChallengeText.width())/2f;
+            expandedChallengeText.y = expandedChallengeIcon.y + expandedChallengeIcon.height();
+            PixelScene.align(expandedChallengeText);
+
+            expandedChallengeButton.setRect(expandedChallengeIcon.x, expandedChallengeIcon.y, expandedChallengeIcon.width(), expandedChallengeIcon.height() + expandedChallengeText.height());
+        }
 
 		danger.setPos( x + WIDTH - danger.width(), y + bg.height + 1 );
 		danger.setSize( camera.width - danger.width(), danger.height());

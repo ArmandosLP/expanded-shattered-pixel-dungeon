@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.SoulPact;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
@@ -132,8 +133,9 @@ public class Badges {
 		RESEARCHER_2                ( 55, BadgeType.JOURNAL ),
 		GAMES_PLAYED_2              ( 56, BadgeType.GLOBAL ),
 		HIGH_SCORE_2                ( 57 ),
-
-		//gold
+        JUST_A_PIECE                ( 144 ), // Expanded mod
+        SOUL_PACT                   ( 152 ), // Expanded mod
+        TOXIC_RELATIONSHIP          ( 153 ), // Expanded mod
 		ENEMY_HAZARDS               ( 64 ),
 		PIRANHAS                    ( 65 ),
 		GRIM_WEAPON                 ( 66 ),
@@ -200,6 +202,7 @@ public class Badges {
 		CHAMPION_1                  ( 111 ),
 
 		//diamond
+        APOTHEOSIS                  ( 168 ), // Expanded mod
 		PACIFIST_ASCENT             ( 120 ),
 		TAKING_THE_MICK             ( 121 ), //This might be the most obscure game reference I've made
 		BOSS_CHALLENGE_5            ( 122 ),
@@ -348,6 +351,40 @@ public class Badges {
 		else        return Badges.local.size();
 	}
 
+    //--------------------------- EXPANDED ---------------------------//
+    public static void validateToxicRelationship() {
+        Badge badge = Badge.TOXIC_RELATIONSHIP;
+        local.add( badge );
+        displayBadge( badge );
+    }
+
+    public static void validateSoulPact() {
+        if (local.contains( Badge.SOUL_PACT ) || Dungeon.hero == null) return;
+
+        SoulPact sp = Dungeon.hero.buff(SoulPact.class);
+        if (sp == null) return;
+
+        if(sp.value() >= 100){
+            Badge badge = Badge.SOUL_PACT;
+            local.add( badge );
+            displayBadge( badge );
+        }
+    }
+
+    public static void validateWorthThePrice() {
+        if (local.contains( Badge.JUST_A_PIECE ) || Dungeon.hero == null) return;
+
+        SoulPact sp = Dungeon.hero.buff(SoulPact.class);
+        if (sp == null) return;
+
+        if(sp.value() > 0){
+            Badge badge = Badge.JUST_A_PIECE;
+            local.add( badge );
+            displayBadge( badge );
+        }
+    }
+
+    //--------------------------- EXPANDED ---------------------------//
 	public static void validateMonstersSlain() {
 		Badge badge = null;
 		

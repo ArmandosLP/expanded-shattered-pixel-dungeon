@@ -122,7 +122,7 @@ public class WellFed extends Buff {
         } else if (hunterSandwichBuff > 0) {
             return Messages.get(this, "hunter_sandwich_desc",hunterSandwichBuff,visualLeft + 1);
         } else if (tarteDeBryBuff > 0) {
-            return Messages.get(this, "hunter_sandwich_desc",tarteDeBryBuff,visualLeft + 1);
+            return Messages.get(this, "tarte_de_bry_desc",tarteDeBryBuff,visualLeft + 1);
         }
 
 		return Messages.get(this, "desc", visualLeft + 1);

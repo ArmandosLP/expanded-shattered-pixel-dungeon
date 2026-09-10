@@ -16,22 +16,31 @@ public class Ferocity extends Buff{
         mnemonicExtended = false;
     }
 
-    public int proc( int damage ) {
+    public float proc( float damage ) {
         left--;
         if (left <= 0) detach();
         return damage + left + 1;
     }
 
     public void set(int duration) {
-        if (duration <= 0) {
+        set(duration, false);
+    }
+
+    public void set(int duration, boolean extend) {
+        int new_duration = duration;
+
+        if (extend){ new_duration += left; }
+
+        if (new_duration <= 0) {
             detach();
             return;
         }
 
-        if (duration > left){
-            left = duration;
-            mnemonicExtended = false; // We consider it as a new effect so it can be buffd again
+        if (new_duration > left){
+            left = new_duration;
         }
+
+        mnemonicExtended = false;
     }
 
     public void mnemonicBoost( int value ) {

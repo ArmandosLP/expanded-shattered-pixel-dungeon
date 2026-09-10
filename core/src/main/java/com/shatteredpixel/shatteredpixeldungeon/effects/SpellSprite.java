@@ -33,6 +33,16 @@ import java.util.HashMap;
 //FIXME this is seriously underused atm, should add more of these!
 public class SpellSprite extends Image {
 
+    // ------------------- EXPANDED ------------------- //
+    public static final int WILLING_SACRIFICE    = 15;
+    public static final int FEROCITY    = 14;
+    public static final int FRENZY      = 10;
+    public static final int RED_SHAMAN_BLESSING    = 11;
+    public static final int BLUE_SHAMAN_BLESSING   = 12;
+    public static final int PURPLE_SHAMAN_BLESSING = 13;
+
+    // ------------------------------------------------ //
+
 	public static final int FOOD		= 0;
 	public static final int MAP			= 1;
 	public static final int CHARGE		= 2;

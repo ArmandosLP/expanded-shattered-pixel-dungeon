@@ -17,10 +17,10 @@ public class Frenzy extends Buff{
         mnemonicExtended = false;
     }
 
-    public int proc( int damage ) {
+    public float proc( float damage ) {
         left--;
         if (left <= 0) detach();
-        return (int)(damage * (dmgBoost + 1f));
+        return damage * (dmgBoost + 1f);
     }
 
     public void set(int hits, float dmgBoost) {

@@ -180,6 +180,7 @@ public class GamesInProgress {
 		public int depth;
 		public int version;
 		public int challenges;
+        public int expandedChallenges;
 
 		public long seed;
 		public String customSeed;

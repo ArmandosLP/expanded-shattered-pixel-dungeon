@@ -53,6 +53,8 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Ripple;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongGhoul;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongGhoul;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
@@ -383,7 +385,7 @@ public class GameScene extends PixelScene {
 		for( CustomTilemap visual : Dungeon.level.customWalls){
 			addCustomWall(visual);
 		}
-		
+
 		statuses = new Group();
 		add( statuses );
 		
@@ -1218,7 +1220,7 @@ public class GameScene extends PixelScene {
 	public static void effectOverFog( Visual effect ) {
 		if (scene != null) scene.overFogEffects.add( effect );
 	}
-	
+
 	public static CheckedCell checkedCell( int pos, int source ){
 		if (scene != null) {
 			CheckedCell check = (CheckedCell) scene.checkedCells.recycle(CheckedCell.class);
@@ -1527,6 +1529,13 @@ public class GameScene extends PixelScene {
 						link.updateVisibility();
 					}
 				}
+
+                if (mob instanceof StrongGhoul){
+                    for (StrongGhoul.GhoulLifeLink link : mob.buffs(StrongGhoul.GhoulLifeLink.class)){
+                        link.updateVisibility();
+                    }
+                }
+
 			}
 		}
 	}

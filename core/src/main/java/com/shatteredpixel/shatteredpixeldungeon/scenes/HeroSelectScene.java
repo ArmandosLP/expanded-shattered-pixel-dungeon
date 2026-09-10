@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.windows.WndExpandedChallenges;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
@@ -628,6 +629,8 @@ public class HeroSelectScene extends PixelScene {
 
 		protected StyledButton challengeButton;
 
+        protected StyledButton expandedChallengeButton;
+
 		@Override
 		protected void createChildren() {
 
@@ -820,6 +823,32 @@ public class HeroSelectScene extends PixelScene {
 			challengeButton.icon(Icons.get(SPDSettings.challenges() > 0 ? Icons.CHALLENGE_COLOR : Icons.CHALLENGE_GREY));
 			add(challengeButton);
 			buttons.add(challengeButton);
+
+            expandedChallengeButton = new StyledButton(Chrome.Type.BLANK, Messages.get(WndExpandedChallenges.class, "title"), 6){
+                @Override
+                protected void onClick() {
+                    if (!Badges.isUnlocked(Badges.Badge.VICTORY) && !DeviceCompat.isDebug()){
+                        ShatteredPixelDungeon.scene().addToFront( new WndTitledMessage(
+                                Icons.get(Icons.CHALLENGE_GREY),
+                                Messages.get(WndExpandedChallenges.class, "title"),
+                                Messages.get(WndExpandedChallenges.class, "challenges_nowin")
+                        ));
+                        return;
+                    }
+
+                    ShatteredPixelDungeon.scene().addToFront(new WndExpandedChallenges(SPDSettings.expandedChallenges(), true) {
+                        public void onBackPressed() {
+                            super.onBackPressed();
+                            icon(Icons.get(SPDSettings.expandedChallenges() > 0 ? Icons.CHALLENGE_COLOR : Icons.CHALLENGE_GREY));
+                            updateOptionsColor();
+                        }
+                    } );
+                }
+            };
+            expandedChallengeButton.leftJustify = true;
+            expandedChallengeButton.icon(Icons.get(SPDSettings.expandedChallenges() > 0 ? Icons.CHALLENGE_COLOR : Icons.CHALLENGE_GREY));
+            add(expandedChallengeButton);
+            buttons.add(expandedChallengeButton);
 
 			int unlockedCount = 0;
 			for (HeroClass cls : HeroClass.values()){

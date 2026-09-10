@@ -1,6 +1,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -45,6 +46,8 @@ public class SoulPact extends Buff implements Hero.Doom {
 
 	public void addLevel(int val){
 		level += val;
+        Badges.validateWorthThePrice();
+        Badges.validateSoulPact();
 	}
 
 	public int value(){

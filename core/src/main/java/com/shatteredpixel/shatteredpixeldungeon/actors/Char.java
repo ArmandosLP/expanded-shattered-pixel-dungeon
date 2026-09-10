@@ -100,6 +100,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.curse.CurseOfCondemnation;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Sticky;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Ferocity;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Frenzy;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.ShamanBlessing;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.SwarmPoison;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
@@ -440,6 +446,16 @@ public abstract class Char extends Actor {
 				dmg *= 1.5f;
 			}
 
+            Ferocity ferocity = buff(Ferocity.class);
+            if (ferocity != null){
+                dmg = ferocity.proc(dmg);
+            }
+
+            Frenzy frenzy = buff(Frenzy.class);
+            if (frenzy != null){
+                dmg = frenzy.proc(dmg);
+            }
+
 			if (buff( PowerOfMany.PowerBuff.class) != null){
 				if (buff( BeamingRay.BeamingRayBoost.class) != null
 					&& buff( BeamingRay.BeamingRayBoost.class).object == enemy.id()){
@@ -479,6 +495,10 @@ public abstract class Char extends Actor {
 				dmg *= 0.2f;
 			}
 
+            if ( buff(ShamanBlessing.Red.class) != null ){
+                dmg *= 0.67f;
+            }
+
 			if ( buff(Weakness.class) != null ){
 				dmg *= 0.67f;
 			}
@@ -496,7 +516,9 @@ public abstract class Char extends Actor {
 				//vulnerable specifically applies after armor reductions
 				if (enemy.buff(Vulnerable.class) != null) {
 					effectiveDamage *= 1.33f;
-				}
+				}else if (enemy.buff(ShamanBlessing.Blue.class) != null) {
+                    effectiveDamage *= 0.67f;
+                }
 
 				effectiveDamage = attackProc(enemy, effectiveDamage);
 			}
@@ -648,6 +670,7 @@ public abstract class Char extends Actor {
 
 		float acuRoll = Random.Float( acuStat );
 		if (attacker.buff(Bless.class) != null) acuRoll *= 1.25f;
+        if (attacker.buff( ShamanBlessing.Purple.class) != null) acuRoll *= 1.2f;
 		if (attacker.buff(  Hex.class) != null) acuRoll *= 0.8f;
 		if (attacker.buff( Daze.class) != null) acuRoll *= 0.5f;
 		for (ChampionEnemy buff : attacker.buffs(ChampionEnemy.class)){
@@ -664,6 +687,7 @@ public abstract class Char extends Actor {
 
 		float defRoll = Random.Float( defStat );
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
+        if (attacker.buff(  ShamanBlessing.Purple.class) != null) defRoll *= 1.2f;
 		if (defender.buff(  Hex.class) != null) defRoll *= 0.8f;
 		if (defender.buff( Daze.class) != null) defRoll *= 0.5f;
 		for (ChampionEnemy buff : defender.buffs(ChampionEnemy.class)){
@@ -788,6 +812,7 @@ public abstract class Char extends Actor {
 	public float speed() {
 		float speed = baseSpeed;
 		if ( buff( Cripple.class ) != null ) speed /= 2f;
+        if ( buff( Sticky.class )  != null ) speed /= 2f;
 		if ( buff( Stamina.class ) != null) speed *= 1.5f;
 		if ( buff( Adrenaline.class ) != null) speed *= 2f;
 		if ( buff( Haste.class ) != null) speed *= 3f;
@@ -879,6 +904,11 @@ public abstract class Char extends Actor {
 
 		//temporarily assign to a float to avoid rounding a bunch
 		float damage = dmg;
+
+        CurseOfCondemnation cond = buff(CurseOfCondemnation.class);
+        if (cond != null){
+            damage = cond.proc(damage);
+        }
 
 		//if dmg is from a character we already reduced it in Char.attack
 		if (!(src instanceof Char)) {
@@ -1063,7 +1093,7 @@ public abstract class Char extends Actor {
 			if (src instanceof Burning)                                 icon = FloatingText.BURNING;
 			if (src instanceof Electricity)                             icon = FloatingText.SHOCKING;
 			if (src instanceof Bleeding)                                icon = FloatingText.BLEEDING;
-			if (src instanceof ToxicGas)                                icon = FloatingText.TOXIC;
+			if (src instanceof ToxicGas || src instanceof SwarmPoison)  icon = FloatingText.TOXIC;
 			if (src instanceof Corrosion)                               icon = FloatingText.CORROSION;
 			if (src instanceof Poison)                                  icon = FloatingText.POISON;
 			if (src instanceof Ooze)                                    icon = FloatingText.OOZE;
@@ -1187,7 +1217,13 @@ public abstract class Char extends Actor {
 			//slowed and chilled do not stack
 		} else if (buff( Chill.class ) != null) {
 			timeScale *= buff( Chill.class ).speedFactor();
-		}
+		} else if (buff( SwarmPoison.class ) != null){
+            // Technically swarm poison should stack with chill, but it feels to unfair
+            if (buff( SwarmPoison.class ).stage() >= SwarmPoison.STAGE_3) {
+                timeScale *= buff(SwarmPoison.class).speedFactor();
+            }
+        }
+
 		if (buff( Speed.class ) != null) {
 			timeScale *= 2.0f;
 		}

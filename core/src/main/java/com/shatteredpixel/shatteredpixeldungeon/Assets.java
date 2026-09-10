@@ -229,6 +229,12 @@ public class Assets {
 		public static final String SHEEP    = "sounds/sheep.mp3";
 		public static final String MINE    = "sounds/mine.mp3";
 
+        // ------------ EXPANDED ------------ //
+
+        public static final String RIPPER_SCREAM = "sounds/ripper_scream.mp3";
+
+        // ---------------------------------- //
+
 		public static final String[] all = new String[]{
 				CLICK, BADGE, GOLD,
 
@@ -240,7 +246,7 @@ public class Assets {
 				DESCEND, EAT, READ, LULLABY, DRINK, SHATTER, ZAP, LIGHTNING, LEVELUP, DEATH,
 				CHALLENGE, CURSED, TRAP, EVOKE, TOMB, ALERT, MELD, BOSS, BLAST, PLANT, RAY, BEACON,
 				TELEPORT, CHARMS, MASTERY, PUFF, ROCKS, BURNING, FALLING, GHOST, SECRET, BONES,
-				BEE, DEGRADE, MIMIC, DEBUFF, CHARGEUP, GAS, CHAINS, SCAN, SHEEP, MINE
+				BEE, DEGRADE, MIMIC, DEBUFF, CHARGEUP, GAS, CHAINS, SCAN, SHEEP, MINE, RIPPER_SCREAM
 		};
 	}
 
@@ -267,6 +273,12 @@ public class Assets {
 	}
 
 	public static class Sprites {
+        public static final String INCUBUS         = "sprites/incubus.png";
+        public static final String STRONG_MONK     = "sprites/strong_monk.png";
+        public static final String STRONG_SKELETON = "sprites/strong_skeleton.png";
+        public static final String STRONG_RIPPER   = "sprites/strong_ripper.png";
+        public static final String STRONG_WARLOCK  = "sprites/strong_warlock.png";
+
 		public static final String ITEMS        = "sprites/items.png";
 		public static final String ITEM_ICONS   = "sprites/item_icons.png";
 

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.expanded.ExpandedChallenges;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -217,7 +218,8 @@ public class SPDSettings extends GameSettings {
 	}
 
 	//Game State
-	
+
+    public static final String KEY_EXPANDED_CHALLENGES	= "expanded_challenges";
 	public static final String KEY_LAST_CLASS	= "last_class";
 	public static final String KEY_CHALLENGES	= "challenges";
 	public static final String KEY_CUSTOM_SEED	= "custom_seed";
@@ -251,6 +253,14 @@ public class SPDSettings extends GameSettings {
 	public static int challenges() {
 		return getInt( KEY_CHALLENGES, 0, 0, Challenges.MAX_VALUE );
 	}
+
+    public static void expandedChallenges( int value ) {
+        put( KEY_EXPANDED_CHALLENGES, value );
+    }
+
+    public static int expandedChallenges() {
+        return getInt( KEY_EXPANDED_CHALLENGES, 0, 0, ExpandedChallenges.MAX_VALUE );
+    }
 
 	public static void customSeed( String value ){
 		put( KEY_CUSTOM_SEED, value );

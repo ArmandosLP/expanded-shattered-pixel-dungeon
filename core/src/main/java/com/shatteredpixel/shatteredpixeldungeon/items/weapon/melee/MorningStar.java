@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Daze;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -35,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.audio.Sample;
@@ -49,15 +51,6 @@ public class MorningStar extends MeleeWeapon {
 
 		tier = 2;
 	}
-
-    @Override
-    public int STRReq(int lvl) {
-        int req = STRReq(tier, lvl) + 1; //13 base strength req, up from 12
-        if (masteryPotionBonus){
-            req -= 2;
-        }
-        return req;
-    }
 
     @Override
     public int max(int lvl) {
@@ -125,8 +118,9 @@ public class MorningStar extends MeleeWeapon {
                 if (hero.attack(enemy, dmgMulti, dmgBoost, Char.INFINITE_ACCURACY)) {
                     Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
                     if (enemy.isAlive()){
-                        if (enemy instanceof Mob && enemy.buff(Paralysis.class) == null && ((Mob) enemy).surprisedBy(hero)){
+                        if (enemy instanceof Mob && enemy.buff(StunDilay.class) == null && ((Mob) enemy).surprisedBy(hero)){
                             Buff.affect(enemy, Paralysis.class, 1);
+                            Buff.affect(enemy, StunDilay.class, StunDilay.DURATION);
                         }
                     } else {
                         wep.onAbilityKill(hero, enemy);
@@ -154,4 +148,9 @@ public class MorningStar extends MeleeWeapon {
 		int dmgBoost = 4 + level;
 		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
 	}
+
+    public static class StunDilay extends FlavourBuff{
+        public static final float DURATION	= 10f;
+    }
+
 }

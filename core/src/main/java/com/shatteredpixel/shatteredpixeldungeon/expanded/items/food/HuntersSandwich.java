@@ -22,12 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.expanded.items.food;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WellFed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.FoodHtBoost;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -46,7 +44,6 @@ public class HuntersSandwich extends MeatPie {
 
         if (WoodenSpoon.foodEffectAmplifier() != -1) {
             hero.buff(WellFed.class).specialBuff(this, 1 + WoodenSpoon.foodEffectAmplifier());
-            Buff.affect(hero, FoodHtBoost.class).addLevel(WoodenSpoon.foodEffectAmplifier()); // +1/2/3/4 HT
             hero.updateHT( true );
         }
 	}
@@ -62,7 +59,7 @@ public class HuntersSandwich extends MeatPie {
 
         if (WoodenSpoon.foodEffectAmplifier() != -1){
             desc += "\n\n" + Messages.get(WoodenSpoon.class,"react") + "\n";
-            desc += "\n" + Messages.get(this,"spoon_buff", 1 + WoodenSpoon.foodEffectAmplifier(),WoodenSpoon.foodEffectAmplifier());
+            desc += "\n" + Messages.get(this,"spoon_buff", 1 + WoodenSpoon.foodEffectAmplifier());
         }
 
         return desc;

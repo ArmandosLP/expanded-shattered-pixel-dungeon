@@ -46,6 +46,15 @@ import java.util.LinkedHashMap;
 public class BuffIndicator extends Component {
 
     // ----------------------------------- EXPANDED CONTENT ----------------------------------- //
+    public static final int WILLING_SACRIFICE = 110;
+    public static final int STICKY = 111;
+    public static final int RED_SHAMAN_BLESSING = 112;
+    public static final int BLUE_SHAMAN_BLESSING = 113;
+    public static final int PURPLE_SHAMAN_BLESSING = 114;
+    public static final int SWARM_POISON_1 = 118;
+    public static final int SWARM_POISON_2 = 117;
+    public static final int SWARM_POISON_3 = 116;
+    public static final int SWARM_POISON_4 = 115;
     public static final int FEROCITY = 119;
     public static final int FRENZY = 120;
     public static final int RYE_CARBOHYDRATE_RUSH = 121;

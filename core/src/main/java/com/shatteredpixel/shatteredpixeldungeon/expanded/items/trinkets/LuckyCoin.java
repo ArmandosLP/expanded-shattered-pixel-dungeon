@@ -91,7 +91,7 @@ public class LuckyCoin extends Trinket {
         if (level == -1){
             return 0;
         } else {
-            return 2 + 2*level;
+            return 2 + level;
         }
     }
 

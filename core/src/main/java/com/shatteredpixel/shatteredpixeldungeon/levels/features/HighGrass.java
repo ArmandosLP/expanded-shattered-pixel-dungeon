@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongSnake;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.GoldenBerry;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
@@ -65,7 +66,9 @@ public class HighGrass {
 				//Do nothing
 				freezeTrample = true;
 			} else {
-				Level.set(pos, Terrain.GRASS);
+                if (!(ch instanceof StrongSnake)){ // ExpandedChallenges.STRONGER_MOBS snakes do not destroy furrowed grass
+                    Level.set(pos, Terrain.GRASS);
+                }
 			}
 			
 		} else {
@@ -76,7 +79,9 @@ public class HighGrass {
 				Level.set(pos, Terrain.FURROWED_GRASS);
 				freezeTrample = true;
 			} else {
-				Level.set(pos, Terrain.GRASS);
+                if (!(ch instanceof StrongSnake)){ // ExpandedChallenges.STRONGER_MOBS snakes do not destroy high grass
+                    Level.set(pos, Terrain.GRASS);
+                }
 			}
 			
 			int naturalismLevel = 0;

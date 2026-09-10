@@ -22,12 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.expanded.items.food;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WellFed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.FoodHtBoost;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -44,15 +42,11 @@ public class TarteDeBry extends MeatPie {
 	protected void satisfy(Hero hero) {
 		super.satisfy( hero );
 
-
         if (WoodenSpoon.foodEffectAmplifier() != -1) {
             hero.buff(WellFed.class).specialBuff(this,1 + WoodenSpoon.foodEffectAmplifier());
-            Buff.affect(hero, FoodHtBoost.class).addLevel(WoodenSpoon.foodEffectAmplifier()); // +1/2/3/4 HT
             hero.updateHT( true );
         }
 	}
-
-
 
     @Override
     public String desc() {
@@ -65,57 +59,9 @@ public class TarteDeBry extends MeatPie {
 
         if (WoodenSpoon.foodEffectAmplifier() != -1){
             desc += "\n\n" + Messages.get(WoodenSpoon.class,"react") + "\n";
-            desc += "\n" + Messages.get(this,"spoon_buff", 1 + WoodenSpoon.foodEffectAmplifier(),WoodenSpoon.foodEffectAmplifier());
+            desc += "\n" + Messages.get(this,"spoon_buff", 1 + WoodenSpoon.foodEffectAmplifier());
         }
 
         return desc;
     }
-	
-//	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe {
-//
-//		@Override
-//		public boolean testIngredients(ArrayList<Item> ingredients) {
-//			boolean pasty = false;
-//			boolean ration = false;
-//			boolean meat = false;
-//
-//			for (Item ingredient : ingredients){
-//				if (ingredient.quantity() > 0) {
-//					if (ingredient instanceof Pasty || ingredient instanceof PhantomMeat) {
-//						pasty = true;
-//					} else if (ingredient.getClass() == Food.class) {
-//						ration = true;
-//					} else if (ingredient instanceof MysteryMeat
-//							|| ingredient instanceof StewedMeat
-//							|| ingredient instanceof ChargrilledMeat
-//							|| ingredient instanceof FrozenCarpaccio) {
-//						meat = true;
-//					}
-//				}
-//			}
-//
-//			return pasty && ration && meat;
-//		}
-//
-//		@Override
-//		public int cost(ArrayList<Item> ingredients) {
-//			return 6;
-//		}
-//
-//		@Override
-//		public Item brew(ArrayList<Item> ingredients) {
-//			if (!testIngredients(ingredients)) return null;
-//
-//			for (Item ingredient : ingredients){
-//				ingredient.quantity(ingredient.quantity() - 1);
-//			}
-//
-//			return sampleOutput(null);
-//		}
-//
-//		@Override
-//		public Item sampleOutput(ArrayList<Item> ingredients) {
-//			return new HuntersSandwich();
-//		}
-//	}
 }
