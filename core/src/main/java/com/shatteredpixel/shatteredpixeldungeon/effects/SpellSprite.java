@@ -34,6 +34,7 @@ import java.util.HashMap;
 public class SpellSprite extends Image {
 
     // ------------------- EXPANDED ------------------- //
+    public static final int HEALING    = 16;
     public static final int WILLING_SACRIFICE    = 15;
     public static final int FEROCITY    = 14;
     public static final int FRENZY      = 10;

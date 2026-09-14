@@ -100,7 +100,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.curse.CurseOfCondemnation;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Sticky;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Ferocity;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Frenzy;
@@ -904,11 +903,6 @@ public abstract class Char extends Actor {
 
 		//temporarily assign to a float to avoid rounding a bunch
 		float damage = dmg;
-
-        CurseOfCondemnation cond = buff(CurseOfCondemnation.class);
-        if (cond != null){
-            damage = cond.proc(damage);
-        }
 
 		//if dmg is from a character we already reduced it in Char.attack
 		if (!(src instanceof Char)) {

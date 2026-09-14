@@ -24,6 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.ExpandedChallenges;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongStatue;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.RatSkull;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -210,7 +212,11 @@ public class Statue extends Mob {
 		if (Random.Float() < altChance){
 			statue = new ArmoredStatue();
 		} else {
-			statue = new Statue();
+            if (Dungeon.isExpandedChallenged(ExpandedChallenges.STRONGER_MOBS)){
+                statue = new StrongStatue();
+            }else{
+                statue = new Statue();
+            }
 		}
 		statue.createWeapon(useDecks);
 		return statue;

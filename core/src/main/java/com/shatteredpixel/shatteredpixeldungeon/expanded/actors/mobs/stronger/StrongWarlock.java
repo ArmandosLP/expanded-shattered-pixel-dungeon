@@ -31,12 +31,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.sprites.ShadowWarlockSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -54,7 +56,6 @@ public class StrongWarlock extends Mob implements Callback {
 
 	private static final float TIME_TO_ZAP              = 1f;
     private static final float TIME_TO_CREATE_SHADOW    = 1f;
-    private static final float TIME_TO_SHADOW_SWITCH    = 1f;
 
 	{
 		spriteClass = StrongWarlockSprite.class;
@@ -75,57 +76,13 @@ public class StrongWarlock extends Mob implements Callback {
 
     private int shadowID = -1;
 
-    private boolean canCreateShadow(){
-        return Actor.findById(shadowID) == null;
-    }
-
-    public boolean doShadowSwitch(ShadowWarlock shadowWarlock){
-        if (sprite.visible || shadowWarlock.sprite.visible){
-            sprite.zap(shadowWarlock.pos, new Callback() { @Override public void call() {} }); // Do nothing, just visual attack
-            Sample.INSTANCE.play( Assets.Sounds.ZAP );
-
-            MagicMissile.boltFromChar( sprite.parent, MagicMissile.ELMO, sprite, shadowWarlock.pos, new Callback() {
-                @Override
-                public void call() {
-                    shadowSwitch(shadowWarlock);
-                    next();
-                }
-            });
-            return false;
+    @Override
+    public void die(Object cause) {
+        super.die(cause);
+        if (Char.findById(shadowID) != null){
+            ((Shadow) Actor.findById(shadowID)).die(cause);
         }
-        shadowSwitch(shadowWarlock);
-        return true;
     }
-
-    private void shadowSwitch(ShadowWarlock shadowWarlock){
-        spend(TIME_TO_SHADOW_SWITCH);
-
-        int lastPos = this.pos;
-        ScrollOfTeleportation.appear(this, shadowWarlock.pos);
-        ScrollOfTeleportation.appear(shadowWarlock, lastPos);
-    }
-//        this.pos = shadowWarlock.pos;
-//        this.sprite.place(shadowWarlock.pos);
-//        Dungeon.level.occupyCell(this);
-//        this.sprite.visible = Dungeon.level.heroFOV[shadowWarlock.pos];
-
-//        shadowWarlock.pos = lastPos;
-//        shadowWarlock.sprite.place(lastPos);
-//        Dungeon.level.occupyCell(shadowWarlock);
-//        shadowWarlock.sprite.visible = Dungeon.level.heroFOV[lastPos];
-
-    /*
-        // Not yet implemented properly
-        if (Dungeon.isExpandedChallenged(ExpandedChallenges.STRONGER_MOBS)) {
-            do {pos = level.pointToCell(random());
-            } while (level.map[pos] != Terrain.EMPTY_SP || level.heaps.get(pos) != null);
-
-            EnergySlime energySlime = new EnergySlime();
-            energySlime.pos = pos;
-            level.mobs.add(energySlime);
-        }
-*/
-
 
     public boolean doCreateShadow(int cell){
         if (sprite.visible || Dungeon.hero.fieldOfView[cell]){
@@ -136,6 +93,8 @@ public class StrongWarlock extends Mob implements Callback {
                 @Override
                 public void call() {
                     createShadow( cell );
+                    CellEmitter.get(cell).burst(ShadowParticle.CURSE, 6);
+                    Sample.INSTANCE.play(Assets.Sounds.CURSED);
                     next();
                 }
             });
@@ -144,19 +103,18 @@ public class StrongWarlock extends Mob implements Callback {
         createShadow(cell);
         return true;
     }
-
     private void createShadow(int cell){
         spend(TIME_TO_CREATE_SHADOW);
 
-        ShadowWarlock lastShadow = (ShadowWarlock) Actor.findById(shadowID);
+        Shadow lastShadow = (Shadow) Actor.findById(shadowID);
         if (lastShadow != null){ lastShadow.destroy(); }
 
-        ShadowWarlock shadow = new ShadowWarlock();
+        Shadow shadow = new Shadow();
         shadow.warlockID = this.id();
 
         this.shadowID = shadow.id();
-        shadow.pos = cell;
 
+        shadow.pos = cell;
         GameScene.add( shadow );
         Dungeon.level.occupyCell( shadow );
 
@@ -168,75 +126,46 @@ public class StrongWarlock extends Mob implements Callback {
         }
     }
 
-    private int evaluateCell(int cell, int enemyCell){
-        if (!fieldOfView[cell]) { return -1; }
-        if (!Dungeon.level.passable[cell]) { return -1; }
-        if (Actor.findChar( cell ) != null) { return -1; }
-        if (Char.hasProp(this, Property.LARGE) || !Dungeon.level.openSpace[cell]) { return -1; } // Mainly used for giant champions
-
-        if (new Ballistica( pos, cell, Ballistica.MAGIC_BOLT).collisionPos != cell){ return -1; }
-
-        int thisToCell = Dungeon.level.distance(pos, cell);
-        if (thisToCell < 2){ return -1; }
-
-        int enemyToCell = Dungeon.level.distance(enemyCell, cell);
-        if (enemyToCell < 2){ return -1; }
-
-        if (new Ballistica( cell, enemyCell, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos){ return -1; }
-
-        return thisToCell + enemyToCell + enemyToCell > thisToCell ? 1 : 0;
+    private boolean isCellValid(int cell){
+        return (fieldOfView[cell] &&
+                Dungeon.level.passable[cell] &&
+                Char.findChar(cell) == null &
+                        (!Char.hasProp(this, Property.LARGE) && Dungeon.level.openSpace[cell]) // Mainly used for giant champions
+        );
     }
 
-    // Can be this or other warlock
-    // FIXME What if in dunger warlock is not visible for this warlock?
-    private StrongWarlock inDangerWarlock(){
-        for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])){
-            if (
-                    m instanceof StrongWarlock &&
-                    !m.isCharmedBy(enemy) &&
-                    m.isTargeting(enemy) &&
-                    m.distance(enemy) == (m == this ? 2 : 1)
-            ){
-                return (StrongWarlock) m;
-            }
-        }
-        return null;
-    }
-
-
-    private int optimalPosForEscape(StrongWarlock theEscapist){ // no way, the escapist reference!
-        int bestValue = -1;
+    private int createShadowPos(Char target){
+        int higherValue = 0;
         int cell = -1;
-        for (int c = 0; c < fieldOfView.length; c++){
-            if (fieldOfView[c] && new Ballistica( pos, c, Ballistica.MAGIC_BOLT).collisionPos == c){
-                int value = Dungeon.level.distance(c, enemy.pos);
-                if (
-                        value > bestValue &&
-                        value > 2 && // Not worth the escape
-                        // make sure the escapist can actually escape if it is not this
-                        ( theEscapist == this || new Ballistica(theEscapist.pos, c, Ballistica.MAGIC_BOLT).collisionPos == c )
-                )
-                {
-                    bestValue = value;
-                    cell = c;
-                }
+
+        for (int c = 0; c < fieldOfView.length; c++) {
+            if ( !isCellValid(c) ) { continue; }
+
+            int value = -1;
+
+            int posToCell    = Dungeon.level.distance(pos, c);
+            int targetToCell = Dungeon.level.distance(target.pos, c);
+
+            if (
+                    posToCell >= 2 &&
+                    targetToCell >= 2 &&
+                    (target != Dungeon.hero || Dungeon.hero.fieldOfView[c]) && // Make sure hero can see where shadow is placed
+                    new Ballistica( pos,        c, Ballistica.MAGIC_BOLT).collisionPos == c &&
+                    new Ballistica( c, target.pos, Ballistica.MAGIC_BOLT).collisionPos == target.pos
+            ) {
+                value = posToCell + targetToCell + targetToCell > posToCell ? 1 : 0;
+            }
+
+            if (value > higherValue) {
+                higherValue = value;
+                cell = c;
             }
         }
         return cell;
     }
 
-    private ShadowWarlock optimalEscapeShadow(){
-        for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])){
-            if (
-                    m instanceof ShadowWarlock &&
-                    fieldOfView[m.pos] &&
-                    new Ballistica( pos, m.pos, Ballistica.MAGIC_BOLT).collisionPos == m.pos &&
-                    m.distance(enemy) > 2
-            ){
-                return (ShadowWarlock) m;
-            }
-        }
-        return null;
+    private Shadow shadowWarlock(){
+        return (Shadow) Actor.findById(shadowID);
     }
 
     private class Hunting extends Mob.Hunting {
@@ -244,38 +173,11 @@ public class StrongWarlock extends Mob implements Callback {
         public boolean act(boolean enemyInFOV, boolean justAlerted) {
             enemySeen = enemyInFOV;
 
-            if (!justAlerted && enemySeen && distance(enemy) == 1){
-                ShadowWarlock escapeShadow = optimalEscapeShadow();
-                if (escapeShadow != null){
-                    return doShadowSwitch(escapeShadow);
+            if (enemySeen && !isCharmedBy(enemy) && shadowWarlock() == null && !canAttack(enemy)) {
+                int cell = createShadowPos(enemy);
+                if (cell != -1) {
+                    return doCreateShadow(cell);
                 }
-            }
-
-            if (enemySeen && !isCharmedBy(enemy) && canCreateShadow()) {
-                // Tries to create shadow for later escape
-                StrongWarlock inDangerWarlock = inDangerWarlock();
-                if (inDangerWarlock != null){
-                    int shadowPos = optimalPosForEscape(inDangerWarlock);
-                    if (shadowPos != -1){
-                        return doCreateShadow(shadowPos);
-                    }
-                }
-
-                // Tries to create shadow for later escape
-                if (!canAttack(enemy)){
-                    int higherValue = 0;
-                    int cell = -1;
-                    for (int i = 0; i < fieldOfView.length; i++) {
-                        int value = evaluateCell(i, enemy.pos);
-                        if (value > higherValue) {
-                            higherValue = value;
-                            cell = i;
-                        }
-                    }
-                    if (cell != -1) return doCreateShadow(cell);
-                }
-
-
             }
 
             return super.act(enemyInFOV,justAlerted);
@@ -284,8 +186,7 @@ public class StrongWarlock extends Mob implements Callback {
 
 	@Override
 	public int damageRoll() {
-        return 3;
-//		return Random.NormalIntRange( 12, 18 );
+        return Random.NormalIntRange( 12, 18 );
 	}
 	
 	@Override
@@ -297,22 +198,26 @@ public class StrongWarlock extends Mob implements Callback {
 	public int drRoll() {
 		return super.drRoll() + Random.NormalIntRange(0, 8);
 	}
-	
-	@Override
-	protected boolean canAttack( Char enemy ) {
-        ShadowWarlock shadow = (ShadowWarlock) Actor.findById(shadowID);
 
-        if (shadow != null){
+    private Shadow getShadowForComboZap(){
+        for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])){
             if (
-                    new Ballistica( shadow.pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos &&
-                    new Ballistica( pos, shadow.pos, Ballistica.MAGIC_BOLT).collisionPos == shadow.pos
+                    mob instanceof Shadow &&
+                            fieldOfView[mob.pos] &&
+                            new Ballistica( pos, mob.pos, Ballistica.MAGIC_BOLT).collisionPos == mob.pos &&
+                            new Ballistica( mob.pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos
             ){
-                return true;
+                return (Shadow) mob;
             }
         }
+        return null;
+    }
 
-		return super.canAttack(enemy)
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+	@Override
+	protected boolean canAttack( Char enemy ) {
+		return super.canAttack(enemy) ||
+                new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos ||
+                getShadowForComboZap() != null;
 	}
 
     // FIXME Refactor this
@@ -320,8 +225,6 @@ public class StrongWarlock extends Mob implements Callback {
         if (Dungeon.level.adjacent( pos, enemy.pos )){
             return super.doAttack( enemy );
         }
-
-        ShadowWarlock shadow = (ShadowWarlock) Actor.findById(shadowID);
 
         if (new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos){
             if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
@@ -331,41 +234,13 @@ public class StrongWarlock extends Mob implements Callback {
                 zap();
                 return true;
             }
-        }else if (
-                shadow != null &&
-                new Ballistica( shadow.pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos &&
-                new Ballistica( pos, shadow.pos, Ballistica.MAGIC_BOLT).collisionPos == shadow.pos
-        ){
-            //multi zap logic
-            if ( (sprite != null && shadow.sprite != null) && (sprite.visible || enemy.sprite.visible || shadow.sprite.visible) ) {
+        }
 
-                sprite.zap(shadow.pos, new Callback() { @Override public void call() {} }); // Do nothing, just visual
+        Shadow shadow = getShadowForComboZap();
 
-                Sample.INSTANCE.play( Assets.Sounds.ZAP );
-                MagicMissile.boltFromChar(
-                        sprite.parent,
-                        MagicMissile.SHADOW,
-                        sprite,
-                        shadow.pos,
-                        new Callback() {
-                            @Override
-                            public void call() {
-                                Sample.INSTANCE.play( Assets.Sounds.HIT_PARRY, 1, 1.5f );
-
-                                MagicMissile.boltFromChar(
-                                        shadow.sprite.parent,
-                                        MagicMissile.SHADOW,
-                                        shadow.sprite,
-                                        enemy.pos,
-                                        new Callback() {
-                                            @Override
-                                            public void call() {
-                                                zap();
-                                                next();
-                                            }
-                                        } );
-                            }
-                        } );
+        if (shadow != null){
+            if ((sprite != null && shadow.sprite != null) && (sprite.visible || enemy.sprite.visible || shadow.sprite.visible)) {
+                ((StrongWarlockSprite) sprite).comboZap(shadow, enemy.pos);
                 return false;
             }else{
                 zap();
@@ -440,6 +315,16 @@ public class StrongWarlock extends Mob implements Callback {
 
 	}
 
+    @Override
+    public String name() {
+        return Messages.get(Warlock.class, "name");
+    }
+
+    @Override
+    public String description() {
+        return Messages.get(Warlock.class, "desc") + "\n\n" + Messages.get(this, "talent");
+    }
+
     public static final String SHADOW_ID = "SHADOW_ID";
 
     @Override
@@ -454,10 +339,11 @@ public class StrongWarlock extends Mob implements Callback {
         shadowID = bundle.getInt(SHADOW_ID);
     }
 
-    public static class ShadowWarlock extends Mob {
+    public static class Shadow extends Mob {
         {
             spriteClass = ShadowWarlockSprite.class;
 
+            defenseSkill = 0;
             HP = HT = 1;
             EXP = 0;
 
@@ -469,19 +355,26 @@ public class StrongWarlock extends Mob implements Callback {
         }
 
         private int warlockID = -1;
+        private int deathTimer = 3;
 
         private class Wandering extends Mob.Wandering {
             @Override
             public boolean act(boolean enemyInFOV, boolean justAlerted) {
                 enemySeen = enemyInFOV;
+
+                StrongWarlock master = (StrongWarlock) Char.findById(warlockID);
+
+                if (master == null) { die( null ); }
+                else if (!fieldOfView[master.pos]) { deathTimer -= 1; }
+                else { deathTimer = 3; }
+
+                if (deathTimer <= 0){
+                    die(null);
+                }
+
                 spend(TICK);
                 return true;
             }
-        }
-
-        @Override
-        public int defenseSkill(Char enemy) {
-            return INFINITE_EVASION;
         }
 
         public static final String WARLOCK_ID = "WARLOCK_ID";

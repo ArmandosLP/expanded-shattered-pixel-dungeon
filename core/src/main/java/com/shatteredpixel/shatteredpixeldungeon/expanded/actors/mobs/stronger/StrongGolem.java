@@ -39,7 +39,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
-import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -93,11 +92,11 @@ public class StrongGolem extends Mob {
 		return super.lootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.GOLEM_EQUIP.count);
 	}
 
-	@Override
-	public void rollToDropLoot() {
-		Imp.Quest.process( this );
-		super.rollToDropLoot();
-	}
+    @Override
+    public void rollToDropLoot() {
+        Imp.Quest.oldProcess( this );
+        super.rollToDropLoot();
+    }
 
 	public Item createLoot() {
 		Dungeon.LimitedDrops.GOLEM_EQUIP.count++;

@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.expanded.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongWarlock;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
@@ -31,6 +30,8 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 
 public class StrongWarlockSprite extends MobSprite {
+
+    protected Animation comboZap;
 
 	public StrongWarlockSprite() {
 		super();
@@ -49,13 +50,42 @@ public class StrongWarlockSprite extends MobSprite {
 		attack.frames( frames, 0, 5, 6 );
 		
 		zap = attack.clone();
-		
-		die = new Animation( 15, false );
+        comboZap = attack.clone();
+
+        die = new Animation( 15, false );
 		die.frames( frames, 0, 7, 8, 8, 9, 10 );
 		
 		play( idle );
 	}
-	
+
+    public void comboZap(StrongWarlock.Shadow shadow, int cell ) {
+        animCallback = null;
+        turnTo( ch.pos, cell );
+        play( comboZap );
+
+        Callback callback = new Callback() {
+            @Override
+            public void call() {
+                Sample.INSTANCE.play( Assets.Sounds.HIT_PARRY, 1, 1.5f );
+                MagicMissile.boltFromChar(
+                        shadow.sprite.parent,
+                        MagicMissile.SHADOW,
+                        shadow.sprite,
+                        cell,
+                        new Callback() {
+                            @Override
+                            public void call() {
+                                ((StrongWarlock)ch).onZapComplete();
+                            }
+                        } );
+            }
+        };
+
+        MagicMissile.boltFromChar(parent, MagicMissile.SHADOW, this, shadow.pos, callback );
+
+        Sample.INSTANCE.play( Assets.Sounds.ZAP );
+    }
+
 	public void zap( int cell ) {
 
 		super.zap( cell );
@@ -75,7 +105,7 @@ public class StrongWarlockSprite extends MobSprite {
 	
 	@Override
 	public void onComplete( Animation anim ) {
-		if (anim == zap) {
+		if (anim == zap || anim == comboZap) {
 			idle();
 		}
 		super.onComplete( anim );

@@ -22,20 +22,20 @@
 package com.shatteredpixel.shatteredpixeldungeon.expanded.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongWarlock;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
 import com.watabou.noosa.TextureFilm;
-import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
+import com.watabou.noosa.particles.Emitter;
 
 public class ShadowWarlockSprite extends MobSprite {
+
+    private Emitter particles;
 
 	public ShadowWarlockSprite() {
 		super();
 		
 		texture( Assets.Sprites.STRONG_WARLOCK );
-		
+
 		TextureFilm frames = new TextureFilm( texture, 12, 15 );
 
         int x = 21;
@@ -48,21 +48,41 @@ public class ShadowWarlockSprite extends MobSprite {
 		
 		attack = new Animation( 12, false );
 		attack.frames( frames, x, x+5, x+6 );
-		
-		zap = attack.clone();
-		
-		die = new Animation( 15, false );
-		die.frames( frames, x, x+7, x+8, x+8, x+9, x+10 );
+
+		die = new Animation( 10, false );
+        die.frames( frames, x, x );
 		
 		play( idle );
 	}
 
-	@Override
-	public void onComplete( Animation anim ) {
-		if (anim == zap) {
-			idle();
-		}
-		super.onComplete( anim );
-	}
+    @Override
+    public void die() {
+        super.die();
 
+        particles = emitter();
+        particles.pour( ShadowParticle.UP, 0.02f );
+        particles.visible = visible;
+        particles.on = true;
+    }
+
+    @Override
+    public void kill() {
+        super.kill();
+        if (particles != null){
+            particles.killAndErase();
+        }
+    }
+
+    @Override
+    public int blood() {
+        return 0x88000000;
+    }
+
+    @Override
+    public void onComplete(Animation anim) {
+        if (anim == die && particles != null){
+            particles.on = false;
+        }
+        super.onComplete(anim);
+    }
 }

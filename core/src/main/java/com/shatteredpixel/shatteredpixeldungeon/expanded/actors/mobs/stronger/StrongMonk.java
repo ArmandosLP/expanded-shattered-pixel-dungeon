@@ -42,15 +42,12 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
-
-import java.util.ArrayList;
 
 public class StrongMonk extends Mob {
 
@@ -74,9 +71,9 @@ public class StrongMonk extends Mob {
         energy = 10f; // Start with max energy
 	}
 
-    private static final float FOCUS_COST = 7f;
+    private static final float FOCUS_COST = 6f;
     private static final float DASH_COST = 8f;
-    private static final float KICK_COST = 6f;
+    private static final float KICK_COST = 4f;
     private static final float MAX_ENERGY = 10f;
 
     private static final int DASH_RANGE = 4;
@@ -121,15 +118,16 @@ public class StrongMonk extends Mob {
 	public int drRoll() {
 		return super.drRoll() + Random.NormalIntRange(0, 2);
 	}
-	
-	@Override
-	public void rollToDropLoot() {
-		Imp.Quest.process( this );
-		super.rollToDropLoot();
-	}
+
+    @Override
+    public void rollToDropLoot() {
+        Imp.Quest.oldProcess( this );
+
+        super.rollToDropLoot();
+    }
 
     private void focus(){
-        if (buff(Monk.Focus.class) != null || energy < FOCUS_COST) { return; }
+        if (buff(Monk.Focus.class) != null || energy < FOCUS_COST || state != HUNTING) { return; }
         spendEnergy(FOCUS_COST);
         Buff.affect( this, Monk.Focus.class );
     }
@@ -147,15 +145,18 @@ public class StrongMonk extends Mob {
 
             WandOfBlastWave.throwChar(enemy, trajectory, KICK_POWER, true, false, Monk.class);
             Buff.affect(enemy, Paralysis.class, 1);
-            beckon( enemy.pos );
 
-            if (enemy == Dungeon.hero){
-                Dungeon.observe();
-                GameScene.updateFog();
-            }else{
-                enemy.sprite.visible = Dungeon.level.heroFOV[trajectory.collisionPos];
-            }
-
+            // Maintain aggro after kick Wand Of Blast Wave Pushing
+            Actor afterKickAgro = new Actor() {
+                { actPriority = VFX_PRIO; }
+                @Override
+                protected boolean act() {
+                    beckon( enemy.pos );
+                    remove(this);
+                    return true;
+                }
+            };
+            add(afterKickAgro);
         }
     }
 
@@ -204,7 +205,7 @@ public class StrongMonk extends Mob {
 
 	@Override
 	protected void spend( float time ) {
-        addEnergy(1);
+        addEnergy(time);
         super.spend( time );
 	}
 
@@ -218,6 +219,7 @@ public class StrongMonk extends Mob {
     @Override
 	public int defenseSkill( Char enemy ) {
 		if (buff(Monk.Focus.class) != null && paralysed == 0 && state != SLEEPING){
+            spendEnergy(MAX_ENERGY); // Avoids using focus immediately after losing it
 			return INFINITE_EVASION;
 		}
 		return super.defenseSkill( enemy );
