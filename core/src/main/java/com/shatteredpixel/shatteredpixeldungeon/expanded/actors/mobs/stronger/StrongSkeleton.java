@@ -25,263 +25,156 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ShieldOfLight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Skeleton;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.ExpandedChallenges;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.sprites.StrongSkeletonSprite;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
-import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.SkeletonSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-import com.watabou.utils.Reflection;
 
-public class StrongSkeleton extends Mob {
-    public int weaponDurability;
+public class StrongSkeleton extends Skeleton {
 
 	{
-		spriteClass = SkeletonSprite.class;
-
-		HP = HT = 25;
-		defenseSkill = 9;
-		
-		EXP = 5;
-		maxLvl = 10;
-
-		loot = Generator.Category.WEAPON;
-		lootChance = 0.1667f; //by default, see lootChance()
-
-        properties.add(Property.UNDEAD);
-		properties.add(Property.INORGANIC);
-
-        weaponDurability = 0;
+		spriteClass = StrongSkeletonSprite.class;
 	}
 
-    @Override
-    protected void onAdd() {
-        super.onAdd();
-        System.out.println(sprite);
+    public enum Weapon {
+        NONE,
+        SHIELD,
+        SPEAR,
+        SWORD
     }
 
-    @Override
-	public int damageRoll() {
-		return Random.NormalIntRange( 2, 10 );
-	}
+    private Weapon weapon = null; //only initially
+    private int durability = 0;
 
-    @Override
-	public void die( Object cause ) {
-		
-		super.die( cause );
-		
-		if (cause == Chasm.class) return;
-		
-		boolean heroKilled = false;
-		for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
-			Char ch = findChar( pos + PathFinder.NEIGHBOURS8[i] );
-			if (ch != null && ch.isAlive()) {
-				int damage = Math.round(Random.NormalIntRange(6, 12));
-				damage = Math.round( damage * AscensionChallenge.statModifier(this));
-
-				//all sources of DR are 2x effective vs. bone explosion
-				//this does not consume extra uses of rock armor and earthroot armor
-
-				WandOfLivingEarth.RockArmor rockArmor = ch.buff(WandOfLivingEarth.RockArmor.class);
-				if (rockArmor != null) {
-					int preDmg = damage;
-					damage = rockArmor.absorb(damage);
-					damage *= Math.round(damage/(float)preDmg); //apply the % reduction twice
-				}
-
-				Earthroot.Armor armor = ch.buff( Earthroot.Armor.class );
-				if (damage > 0 && armor != null) {
-					int preDmg = damage;
-					damage = armor.absorb( damage );
-					damage -= (preDmg - damage); //apply the flat reduction twice
-				}
-
-                WheatBread.CarbohydrateRush wheatCarbRush = buff(WheatBread.CarbohydrateRush.class);
-                if (wheatCarbRush != null){
-                    // Static damage reduction, do not apply the reduction twice.
-                    damage = wheatCarbRush.absorb( damage );
-                }
-
-                RyeBread.CarbohydrateRush ryeCarboRush = buff( RyeBread.CarbohydrateRush.class );
-                if (damage > 0 && ryeCarboRush != null) {
-                    int preDmg = damage;
-                    damage = ryeCarboRush.absorb( damage );
-                    damage -= (preDmg - damage); //apply the flat reduction twice
-                }
-
-				if (ch.buff(MagicImmune.class) == null) {
-					ShieldOfLight.ShieldOfLightTracker shield = ch.buff(ShieldOfLight.ShieldOfLightTracker.class);
-					if (shield != null && shield.object == id()) {
-						int min = 1 + Dungeon.hero.pointsInTalent(Talent.SHIELD_OF_LIGHT);
-						damage -= Random.NormalIntRange(min, 2 * min);
-						damage -= Random.NormalIntRange(min, 2 * min); //apply twice
-						damage = Math.max(damage, 0);
-					} else if (ch == Dungeon.hero
-							&& Dungeon.hero.heroClass != HeroClass.CLERIC
-							&& Dungeon.hero.hasTalent(Talent.SHIELD_OF_LIGHT)
-							&& TargetHealthIndicator.instance.target() == this) {
-						//33/50%
-						if (Random.Int(6) < 1 + Dungeon.hero.pointsInTalent(Talent.SHIELD_OF_LIGHT)) {
-							damage -= 2; //doubled
-						}
-					}
-
-					if (ch.buff(HolyWard.HolyArmBuff.class) != null){
-						//doubled
-						damage -= Dungeon.hero.subClass == HeroSubClass.PALADIN ? 6 : 2;
-					}
-				}
-
-				//apply DR twice (with 2 rolls for more consistency)
-				damage = Math.max( 0,  damage - (ch.drRoll() + ch.drRoll()) );
-				ch.damage( damage, this );
-				if (ch == Dungeon.hero && !ch.isAlive()) {
-					heroKilled = true;
-				}
-			}
-		}
-		
-		if (Dungeon.level.heroFOV[pos]) {
-			Sample.INSTANCE.play( Assets.Sounds.BONES );
-		}
-		
-		if (heroKilled) {
-			Dungeon.fail( this );
-			GLog.n( Messages.get(Skeleton.class, "explo_kill") );
-		}
-	}
-
-	@Override
-	public float lootChance() {
-		//each drop makes future drops 1/3 as likely
-		// so loot chance looks like: 1/6, 1/18, 1/54, 1/162, etc.
-		return super.lootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.SKELE_WEP.count);
-	}
-
-	@Override
-	public Item createLoot() {
-		Dungeon.LimitedDrops.SKELE_WEP.count++;
-		return super.createLoot();
-	}
-
-	@Override
-	public int attackSkill( Char target ) {
-		return 12;
-	}
-	
-	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
-	}
-
-    public static Class<? extends StrongSkeleton> random(){
+    public static void rollForWeapon(Mob m){
+        //We roll for a weapon always to ensure that rollForWeapon does not affect levelgen RNG
         float roll = Random.Float();
-        if (roll < 0.25f){
-            return StrongSkeleton.Spear.class;
-        } else if (roll < 0.50f){
-            return StrongSkeleton.Sword.class;
-        } else if (roll < 0.75f){
-            return StrongSkeleton.Shield.class;
-        }else{
-            return StrongSkeleton.class;
+        if (m instanceof StrongSkeleton && Dungeon.isExpandedChallenged(ExpandedChallenges.STRONGER_MOBS)){
+            ((StrongSkeleton) m).durability = 1;
+            if (roll < 0.25f){
+                ((StrongSkeleton) m).weapon =  Weapon.SWORD;
+            } else if (roll < 0.50f){
+                ((StrongSkeleton) m).weapon =  Weapon.SPEAR;
+            } else if (roll < 0.75f){
+                ((StrongSkeleton) m).weapon =  Weapon.SHIELD;
+            }else{
+                ((StrongSkeleton) m).weapon =  Weapon.NONE;
+            }
         }
     }
 
-    public void breakWeapon(int durability){
-        weaponDurability -= durability;
-        if (weaponDurability <= 0){ breakWeapon(); }
+    private void breakWeapon(){
+        breakWeapon(1);
     }
 
-    public void breakWeapon(){
-        weaponDurability = 0;
-        ((StrongSkeletonSprite) sprite).weaponBreak();
-    }
+    private void breakWeapon(int dur){
+        durability -= dur;
 
-    @Override
-    public String name() {
-        return Messages.get(Skeleton.class,"name");
-    }
+        if (durability <= 0) {
+            weapon = Weapon.NONE;
 
-    @Override
-    public String description() {
-        String desc = Messages.get(Skeleton.class,"desc");
-        if (weaponDurability > 0) { desc += "\n\n" + Messages.get(this,"talent"); }
-        return desc;
+            if (sprite == null) return;
+            StrongSkeletonSprite sprite = (StrongSkeletonSprite) this.sprite;
+
+            sprite.setWeapon(StrongSkeleton.Weapon.NONE);
+            if (sprite.visible) { sprite.weaponBreakEffect(); }
+        }
     }
 
     @Override
     public CharSprite sprite() {
-        if (weaponDurability == 0){ return Reflection.newInstance( SkeletonSprite.class ); }
-        return Reflection.newInstance(spriteClass);
-    }
+        if (weapon == null){
+            rollForWeapon(this);
+        }
+        CharSprite sprite = super.sprite();
 
-    public static final String WEAPON_DURABILITY = "weapon_durability";
+        if (weapon != null) {
+            ((StrongSkeletonSprite)sprite).setWeapon(weapon);
+        }
+        return sprite;
+    }
 
     @Override
-    public void storeInBundle(Bundle bundle) {
-        super.storeInBundle(bundle);
-        bundle.put(WEAPON_DURABILITY, weaponDurability);
+    public boolean attack(Char enemy, float dmgMulti, float dmgBonus, float accMulti) {
+        boolean result;
+
+        switch (weapon){
+            case SWORD:
+                result = super.attack(enemy, dmgMulti / 5, dmgBonus, accMulti);
+                if (result) {
+                    Buff.affect( enemy, Bleeding.class).set( ( (float) damageRoll()) );
+                    breakWeapon();
+                }
+                break;
+            case SPEAR:
+                result = super.attack(enemy, dmgMulti, dmgBonus, accMulti / 2);
+                if (result && distance(enemy) == 1) {
+                    breakWeapon();
+                }
+                break;
+            case SHIELD:
+            case NONE:
+            default:
+                result = super.attack(enemy, dmgMulti, dmgBonus, accMulti);
+                break;
+            }
+
+        return result;
     }
 
     @Override
-    public void restoreFromBundle(Bundle bundle) {
-        super.restoreFromBundle(bundle);
-        weaponDurability = bundle.getInt(WEAPON_DURABILITY);
+    public void damage(int dmg, Object src) {
+        super.damage(dmg, src);
+
+        if ( !(src instanceof Blob || src instanceof Buff) && weapon == Weapon.SWORD && isAlive() ){
+            breakWeapon(3);
+        }
     }
 
-    public static class Spear extends StrongSkeleton{
-        {
-            spriteClass = StrongSkeletonSprite.Spear.class;
-            weaponDurability = 3;
+    @Override
+	public int damageRoll() {
+        if (weapon == Weapon.SPEAR){
+            return Random.NormalIntRange( 2, 7 );
         }
+        return Random.NormalIntRange( 2, 10 );
+    }
 
-        @Override
-        public int damageRoll() {
-            if (weaponDurability > 0) {
-                return Random.NormalIntRange(2, 6);
-            }else {
-                return super.damageRoll();
+    @Override
+    public int defenseSkill(Char enemy) {
+        if (weapon == Weapon.SHIELD && state == HUNTING && paralysed <= 0){
+            return INFINITE_EVASION;
+        }
+        return super.defenseSkill(enemy);
+    }
+
+    @Override
+    public String defenseVerb() {
+        if (weapon == Weapon.SHIELD && state == HUNTING && paralysed <= 0){
+            breakWeapon();
+            if (durability > 0 && sprite != null && sprite.visible) {
+                Sample.INSTANCE.play(Assets.Sounds.HIT_PARRY, 1, Random.Float(1.1f, 1.2f));
             }
+            return Messages.get(Monk.class, "parried"); // FIXME maybe different message for shield parry
         }
+        return super.defenseVerb();
+    }
 
-        @Override
-        public boolean attack(Char enemy, float dmgMulti, float dmgBonus, float accMulti) {
-            boolean result = super.attack(enemy, dmgMulti, dmgBonus, accMulti / 0.5f); // half damage to spear attacks
-            if (result && weaponDurability > 0) { breakWeapon(1); }
-            return result;
-        }
+    @Override
+    protected boolean canAttack( Char enemy ) {
+        if (weapon == Weapon.SPEAR && enemy != null){
 
-        @Override
-        protected boolean canAttack( Char enemy ) {
-            if (Dungeon.level.adjacent( pos, enemy.pos )){
-                return true;
-            }
-
-            if (weaponDurability > 0 && Dungeon.level.distance( pos, enemy.pos ) <= 2){
+            if (Dungeon.level.distance( pos, enemy.pos ) <= 2){
                 boolean[] passable = BArray.not(Dungeon.level.solid, null);
 
                 for (Char ch : Actor.chars()) {
@@ -291,79 +184,41 @@ public class StrongSkeleton extends Mob {
 
                 PathFinder.buildDistanceMap(enemy.pos, passable, 2);
 
-                if (PathFinder.distance[pos] <= 2){
-                    return true;
-                }
+                if (PathFinder.distance[pos] <= 2){ return true; }
             }
-
-            return super.canAttack(enemy);
         }
-
+        return super.canAttack(enemy);
     }
 
-    public static class Shield extends StrongSkeleton{
-        {
-            spriteClass = StrongSkeletonSprite.Shield.class;
-            weaponDurability = 2;
+    @Override
+    public String description() {
+        String desc = Messages.get(Skeleton.class,"desc");
+        switch (weapon){
+            case SWORD:
+                desc += "\n\n" + Messages.get(this,"sword");
+                break;
+            case SPEAR:
+                desc += "\n\n" + Messages.get(this,"spear");
+                break;
+            case SHIELD:
+                desc += "\n\n" + Messages.get(this,"shield");
+                break;
         }
-
-        @Override
-        public CharSprite sprite() {
-//            if (weaponDurability > 0){ return Reflection.newInstance( this.spriteClass); }
-            System.out.println(spriteClass);
-            return Reflection.newInstance(spriteClass);
-        }
-
-        boolean shieldProc = false; // Used to connect defenseSkill() and defenseVerb()
-
-        @Override
-        public int defenseSkill( Char enemy ) {
-            if (state == HUNTING && Random.IntRange(0, weaponDurability) != 0){
-                breakWeapon(1);
-                shieldProc = true;
-                return INFINITE_EVASION;
-            }
-            return super.defenseSkill( enemy );
-        }
-
-        @Override
-        public String defenseVerb() {
-            if (shieldProc) {
-                shieldProc = false;
-                if (sprite != null && sprite.visible && weaponDurability != 0) {
-                    Sample.INSTANCE.play(Assets.Sounds.HIT_PARRY, 1, Random.Float(1.1f, 1.2f));
-                }
-                return Messages.get(Monk.class, "parried"); // FIXME maybe different message for shield parry
-            }
-            return super.defenseVerb();
-        }
-
+        return desc;
     }
 
-    public static class Sword extends StrongSkeleton{
-        {
-            spriteClass = StrongSkeletonSprite.Sword.class;
-            weaponDurability = 2;
-        }
+    public static final String WEAPON = "weapon";
 
-        @Override
-        public boolean attack(Char enemy, float dmgMulti, float dmgBonus, float accMulti) {
-            boolean result = super.attack(enemy, dmgMulti, dmgBonus, accMulti / 0.5f); // half damage to sword attacks
-            if (weaponDurability > 0 && result) {
-                if (enemy != null && enemy.isAlive()) Buff.affect( enemy, Bleeding.class).set( ((float) damageRoll()) / 2 );
-                breakWeapon(1);
-            }
-            return result;
-        }
+    @Override
+    public void storeInBundle(Bundle bundle) {
+        super.storeInBundle(bundle);
+        bundle.put(WEAPON, weapon);
+    }
 
-        public void hitSound( float pitch ){
-            if (weaponDurability > 0) {
-                Sample.INSTANCE.play(Assets.Sounds.HIT_SLASH);
-            }else{
-                super.hitSound(pitch);
-            }
-        }
-
+    @Override
+    public void restoreFromBundle(Bundle bundle) {
+        super.restoreFromBundle(bundle);
+        weapon = bundle.getEnum(WEAPON, StrongSkeleton.Weapon.class);
     }
 
 }
