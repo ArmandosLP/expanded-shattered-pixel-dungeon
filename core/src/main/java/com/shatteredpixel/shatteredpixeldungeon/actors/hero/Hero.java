@@ -86,8 +86,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.FoodHtBoost;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Frenzy;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Ferocity;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.artifacts.Spectronomicon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
@@ -101,7 +100,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Stone;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.items.armor.glyphs.Vitality;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.AlchemistsToolkit;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CapeOfThorns;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
@@ -130,7 +128,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.EscapeCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccuracy;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEvasion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfFuror;
@@ -281,8 +278,6 @@ public class Hero extends Char {
         if (buff(FoodHtBoost.class) != null){
             HT += buff(FoodHtBoost.class).boost();
         }
-
-        HT += (int) (Vitality.boostFactor(glyphLevel(Vitality.class)) * RingOfArcana.enchantPowerMultiplier(this));
 
 		SoulPact soulPact = buff(SoulPact.class);
 		if (soulPact != null){
@@ -1653,6 +1648,11 @@ public class Hero extends Char {
 
 	@Override
 	public int glyphLevel(Class<? extends Armor.Glyph> cls) {
+        Spectronomicon book = belongings.getItem(Spectronomicon.class);
+        if (book != null && book.isEquipped(this) && book.cursed) {
+            return -1;
+        }
+
 		if (belongings.armor() != null && belongings.armor().hasGlyph(cls, this)){
 			return Math.max(super.glyphLevel(cls), belongings.armor.buffedLvl());
 		} else if (buff(BodyForm.BodyFormBuff.class) != null

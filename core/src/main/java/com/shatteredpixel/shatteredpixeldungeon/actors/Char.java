@@ -105,6 +105,7 @@ import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Ferocity;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Frenzy;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.ShamanBlessing;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.SwarmPoison;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.armor.glyphs.Vitality;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
@@ -534,6 +535,10 @@ public abstract class Char extends Actor {
 			}
 
 			enemy.damage( effectiveDamage, this );
+
+            if (buff(Vitality.RetainedVitality.class) != null ){
+                buff(Vitality.RetainedVitality.class).proc(effectiveDamage);
+            }
 
 			if (buff(FireImbue.class) != null)  buff(FireImbue.class).proc(enemy);
 			if (buff(FrostImbue.class) != null) buff(FrostImbue.class).proc(enemy);

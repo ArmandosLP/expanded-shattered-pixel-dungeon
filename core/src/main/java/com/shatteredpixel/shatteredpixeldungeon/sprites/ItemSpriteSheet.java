@@ -65,6 +65,14 @@ public class ItemSpriteSheet {
         assignItemRect(ZWEIHANDER,      16, 16);
     }
 
+    // ---- ARTIFACTS --- //
+    private static final int XP_ARTIFACTS     = xy(1, 39);  //32 slots
+    public static final int SPECTERNOMICON    = XP_ARTIFACTS+0;
+
+    static{
+        assignItemRect(SPECTERNOMICON,     13, 16);
+    }
+
     // ---- TRINKETS --- //
     private static final int XP_TRINKETS   = xy(1, 35);
     public static final int LUCKY_COIN      = XP_TRINKETS+0;

@@ -86,7 +86,7 @@ public class StrongStatue extends Statue {
         public boolean act(boolean enemyInFOV, boolean justAlerted) {
             enemySeen = enemyInFOV;
 
-            if (paralysed <= 0 && !isCharmedBy(enemy) && potion != null){
+            if (paralysed <= 0 && enemy != null && !isCharmedBy(enemy) && potion != null){
 
                 boolean show = sprite != null && sprite.visible;
 

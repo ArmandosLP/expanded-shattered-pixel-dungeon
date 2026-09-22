@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.Trinity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.artifacts.Spectronomicon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.AlchemistsToolkit;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
@@ -252,7 +253,14 @@ public class SpiritForm extends ClericSpell {
 
 		} else if (effect instanceof SkeletonKey){
 			GameScene.selectCell(((SkeletonKey) effect).targeter);
-		}
+
+        } else if (effect instanceof Spectronomicon) {
+            GameScene.selectCell(((Spectronomicon) effect).summonTargeter);
+            if (Dungeon.quickslot.contains(armor)) {
+                QuickSlotButton.useTargeting(Dungeon.quickslot.getSlot(armor));
+            }
+
+        }
 	}
 
 }

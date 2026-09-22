@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongDemonSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 
@@ -47,6 +48,7 @@ public class ScrollOfDread extends ExoticScroll {
 
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
+                if (mob instanceof StrongDemonSpawner) { ((StrongDemonSpawner)mob).triggerReflect(this); }
 				if (!mob.isImmune(Dread.class)){
 					Buff.affect( mob, Dread.class ).object = curUser.id();
 				} else {

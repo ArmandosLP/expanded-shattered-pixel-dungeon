@@ -26,8 +26,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 
 public class ExpandedChallenges {
-
-	//Some of these internal IDs are outdated and don't represent what these challenges do
     public static final int STRONGER_MOBS		= 1;
 //	public static final int NO_ARMOR			= 2;
 //	public static final int NO_HEALING			= 4;

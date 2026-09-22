@@ -23,8 +23,6 @@ package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.expanded.items.armor.glyphs.Vitality;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -65,25 +63,5 @@ public class RingOfArcana extends Ring {
 
 	public class Arcana extends RingBuff {
 	}
-
-    @Override
-    public boolean doEquip( Hero hero ) {
-        if (super.doEquip(hero)){
-            if (hero.glyphLevel(Vitality.class) >= 0)
-                hero.updateHT(false);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean doUnequip(Hero hero, boolean collect, boolean single ) {
-        if (super.doUnequip( hero, collect, single )) {
-            if (hero.glyphLevel(Vitality.class) >= 0) hero.updateHT(false);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 }

@@ -33,6 +33,7 @@ public class LuckyCoin extends Trinket {
         image = ItemSpriteSheet.LUCKY_COIN;
     }
 
+    public static final int REQUIRED_SHOP_SPACE = 5; // 2 base, 5 at max lvl
 
     @Override
     public String statsDesc() {

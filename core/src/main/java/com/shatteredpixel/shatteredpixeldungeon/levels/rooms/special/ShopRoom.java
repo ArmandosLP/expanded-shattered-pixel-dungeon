@@ -96,8 +96,8 @@ public class ShopRoom extends SpecialRoom {
 		}
 		spacesNeeded += 4;
 
-        // Add a fixed amount of space needed for extra items even if player does not have Lucky coin
-        spacesNeeded += 8;
+        // Add extra space for lucky coin extra items always to ensure seed consistency
+        spacesNeeded += LuckyCoin.REQUIRED_SHOP_SPACE;
 
 		//we also add 1 more space, for the shopkeeper
 		spacesNeeded++;

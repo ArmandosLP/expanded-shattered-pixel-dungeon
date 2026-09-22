@@ -46,6 +46,7 @@ import java.util.LinkedHashMap;
 public class BuffIndicator extends Component {
 
     // ----------------------------------- EXPANDED CONTENT ----------------------------------- //
+    public static final int RETAINED_VITALITY = 109;
     public static final int WILLING_SACRIFICE = 110;
     public static final int STICKY = 111;
     public static final int RED_SHAMAN_BLESSING = 112;

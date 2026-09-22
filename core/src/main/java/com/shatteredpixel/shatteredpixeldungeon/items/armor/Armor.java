@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.LifeLinkSpell;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.artifacts.Spectronomicon;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -302,9 +303,6 @@ public class Armor extends EquipableItem {
 	@Override
 	public void activate(Char ch) {
 		if (seal != null) Buff.affect(ch, BrokenSeal.WarriorShield.class).setArmor(this);
-
-        // Useful for vitality glyph
-        if (ch instanceof Hero) ((Hero) ch).updateHT(false);
 	}
 
 	public void affixSeal(BrokenSeal seal){
@@ -361,9 +359,6 @@ public class Armor extends EquipableItem {
 
 			BrokenSeal.WarriorShield sealBuff = hero.buff(BrokenSeal.WarriorShield.class);
 			if (sealBuff != null) sealBuff.setArmor(null);
-
-            // Useful for vitality glyph and Decay curse
-            hero.updateHT(false);
 
 			return true;
 
@@ -833,6 +828,13 @@ public class Armor extends EquipableItem {
 		}
 
 		public static float genericProcChanceMultiplier( Char defender ){
+            if (defender instanceof Hero){
+                Spectronomicon book = ((Hero) defender).belongings.getItem(Spectronomicon.class);
+                if (book != null && book.isEquipped((Hero) defender) && book.cursed) {
+                    return 0;
+                }
+            }
+
 			float multi = RingOfArcana.enchantPowerMultiplier(defender);
 
 			if (Dungeon.hero.alignment == defender.alignment

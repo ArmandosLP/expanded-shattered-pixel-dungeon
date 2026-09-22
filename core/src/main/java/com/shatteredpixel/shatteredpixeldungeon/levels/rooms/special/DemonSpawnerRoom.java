@@ -25,6 +25,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DemonSpawner;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.ExpandedChallenges;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongDemonSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -47,7 +49,13 @@ public class DemonSpawnerRoom extends SpecialRoom {
 		Door door = entrance();
 		door.set(Door.Type.UNLOCKED); //cannot be hidden randomly under any circumstance
 
-		DemonSpawner spawner = new DemonSpawner();
+		DemonSpawner spawner;
+        if (Dungeon.isExpandedChallenged(ExpandedChallenges.STRONGER_MOBS)){
+            spawner = new StrongDemonSpawner();
+        }else{
+            spawner = new DemonSpawner();
+        }
+
 		spawner.pos = cx + cy * level.width();
 		Statistics.spawnersAlive++;
 		spawner.spawnRecorded = true;

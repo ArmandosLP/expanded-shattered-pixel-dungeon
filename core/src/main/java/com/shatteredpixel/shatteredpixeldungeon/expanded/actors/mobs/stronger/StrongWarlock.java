@@ -349,6 +349,7 @@ public class StrongWarlock extends Mob implements Callback {
 
             properties.add(Property.IMMOVABLE);
             properties.add(Property.INORGANIC);
+            properties.add(Property.STATIC);
 
             WANDERING = new Wandering();
             state = WANDERING;
