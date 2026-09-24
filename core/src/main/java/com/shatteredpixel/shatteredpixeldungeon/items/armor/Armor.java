@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.LifeLinkSpell;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.armor.glyphs.curses.Clumsy;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.artifacts.Spectronomicon;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
@@ -818,7 +819,7 @@ public class Armor extends EquipableItem {
 
 		public static final Class<?>[] curses = new Class<?>[]{
 				AntiEntropy.class, Corrosion.class, Displacement.class, Metabolism.class,
-				Multiplicity.class, Stench.class, Overgrowth.class, Bulk.class
+				Multiplicity.class, Stench.class, Overgrowth.class, Bulk.class, Clumsy.class
 		};
 		
 		public abstract int proc( Armor armor, Char attacker, Char defender, int damage );

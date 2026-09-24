@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.TarteDeBry;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.LuckyCoin;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.weapon.melee.HawkBeak;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClericArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
@@ -474,9 +475,10 @@ public class Generator {
 					RunicBlade.class,
 					AssassinsBlade.class,
 					Crossbow.class,
-					Katana.class
+					Katana.class,
+                    HawkBeak.class,
 			};
-			WEP_T4.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2 };
+			WEP_T4.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2, 2 };
 			WEP_T4.probs = WEP_T4.defaultProbs.clone();
 			
 			WEP_T5.classes = new Class<?>[]{

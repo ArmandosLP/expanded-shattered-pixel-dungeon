@@ -86,6 +86,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.FoodHtBoost;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.armor.glyphs.curses.Clumsy;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.artifacts.Spectronomicon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
@@ -1039,6 +1040,7 @@ public class Hero extends Char {
 	private boolean actMove( HeroAction.Move action ) {
 
 		if (getCloser( action.dst )) {
+			Clumsy.movementProc(this, glyphLevel( Clumsy.class ));
 			canSelfTrample = false;
 			return true;
 

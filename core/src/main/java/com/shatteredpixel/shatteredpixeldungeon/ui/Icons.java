@@ -136,7 +136,10 @@ public enum Icons {
 	CUBE_CODE,
 	PURIGRO,
 	ARCNOR,
-	ALASTAIR;
+	ALASTAIR,
+    ARMANDOS,
+    ALAN,
+    PAJA;
 
 	public Image get() {
 		return get( this );
@@ -146,6 +149,18 @@ public enum Icons {
 		Image icon = new Image( Assets.Interfaces.ICONS );
 		switch (type) {
 
+            case ARMANDOS:
+                icon.frame( icon.texture.uvRectBySize( 0, 213, 45, 43 ) );
+                icon.scale.set(PixelScene.align(0.40f));
+                break;
+            case ALAN:
+                icon.frame( icon.texture.uvRectBySize( 45, 224, 32, 32 ) );
+                icon.scale.set(PixelScene.align(0.49f));
+                break;
+            case PAJA:
+                icon.frame( icon.texture.uvRectBySize( 77, 224, 32, 32 ) );
+                icon.scale.set(PixelScene.align(0.49f));
+                break;
 			case ENTER:
 				icon.frame( icon.texture.uvRectBySize( 0, 0, 16, 16 ) );
 				break;

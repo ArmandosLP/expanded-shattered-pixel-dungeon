@@ -70,7 +70,6 @@ public class MorningStar extends MeleeWeapon {
         return super.damageRoll( owner );
     }
 
-    // This is a bad idea. Too overpowered.
 	@Override
 	protected int baseChargeUse(Hero hero, Char target){
 		return 1;
@@ -84,9 +83,8 @@ public class MorningStar extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 
-		//+(4+lvl) damage, roughly +50% base dmg, +50% scaling
-		int dmgBoost = augment.damageFactor(4 + buffedLvl());
-
+		//+(1+lvl) damage, bonus damage is low because paralysis already gives a free hit
+		int dmgBoost = augment.damageFactor(1 + buffedLvl());
 		headBlowAbility(hero, target, 1, dmgBoost, this);
 	}
 
@@ -136,7 +134,7 @@ public class MorningStar extends MeleeWeapon {
 
 	@Override
 	public String abilityInfo() {
-		int dmgBoost = levelKnown ? 4 + buffedLvl() : 4;
+		int dmgBoost = levelKnown ? 1 + buffedLvl() : 1;
 		if (levelKnown){
 			return Messages.get(this, "ability_desc", augment.damageFactor(min()+dmgBoost), augment.damageFactor(max()+dmgBoost));
 		} else {
@@ -144,8 +142,9 @@ public class MorningStar extends MeleeWeapon {
 		}
 	}
 
+    @Override
 	public String upgradeAbilityStat(int level){
-		int dmgBoost = 4 + level;
+		int dmgBoost = 1 + level;
 		return augment.damageFactor(min(level)+dmgBoost) + "-" + augment.damageFactor(max(level)+dmgBoost);
 	}
 

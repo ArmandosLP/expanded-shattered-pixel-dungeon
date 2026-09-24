@@ -64,6 +64,51 @@ public class AboutScene extends PixelScene {
 		Component content = list.content();
 		content.clear();
 
+        //*** Expanded Shattered Pixel Dungeon Credits ***
+        final int EXSPD_COLOR = 0x51DFFF;
+        CreditsBlock exshpx = new CreditsBlock(true, EXSPD_COLOR,
+                "Expanded Shattered Pixel Dungeon",
+                Icons.ARMANDOS.get(),
+                "Developed by: _ArmandosLP_\nBased on Shattered Pixel Dungeon's open source",
+                "youtube.com/@Armantres",
+                "https://www.youtube.com/@armantres");
+        if (landscape()){
+            exshpx.setRect((w - fullWidth)/2f - 6, insets.top + 10, 120, 0);
+        } else {
+            exshpx.setRect((w - fullWidth)/2f, insets.top + 6, 120, 0);
+        }
+        content.add(exshpx);
+
+        CreditsBlock alan = new CreditsBlock(false, EXSPD_COLOR,
+                "Pixel Art:",
+                Icons.ALAN.get(),
+                "@alan.weiss",
+                null,
+                null);
+        alan.setSize(colWidth/2f, 0);
+
+        if (landscape()){
+            alan.setPos(exshpx.right(), exshpx.height() / 2 - 5);
+        } else {
+            alan.setPos(w/2f - colWidth/2f, exshpx.bottom()+14);
+        }
+        content.add(alan);
+
+        CreditsBlock paja = new CreditsBlock(false, EXSPD_COLOR,
+                "Pixel Art:",
+                Icons.PAJA.get(),
+                "@bloquedepaja_",
+                null,
+                null);
+        paja.setRect(alan.right(), alan.top(), colWidth/2f, 0);
+        content.add(paja);
+
+        if(landscape()) {
+            addLine(paja.bottom() + 27, content);
+        }else{
+            addLine(paja.bottom() + 8, content);
+        }
+
 		//*** Shattered Pixel Dungeon Credits ***
 
 		CreditsBlock shpx = new CreditsBlock(true, Window.SHPX_COLOR,
@@ -73,9 +118,9 @@ public class AboutScene extends PixelScene {
 				"ShatteredPixel.com",
 				"https://ShatteredPixel.com");
 		if (landscape()){
-			shpx.setRect((w - fullWidth)/2f - 6, insets.top + 26, 120, 0);
+			shpx.setRect((w - fullWidth)/2f - 6, paja.bottom() + 34, 120, 0);
 		} else {
-			shpx.setRect((w - fullWidth)/2f, insets.top + 6, 120, 0);
+			shpx.setRect((w - fullWidth)/2f, paja.bottom() + 14, 120, 0);
 		}
 		content.add(shpx);
 
@@ -87,9 +132,9 @@ public class AboutScene extends PixelScene {
 				"https://www.alekskomitov.com/");
 		aleks.setSize(colWidth/2f, 0);
 		if (landscape()){
-			aleks.setPos(shpx.right(), insets.top+6);
+			aleks.setPos(shpx.right(), exshpx.bottom()+14);
 		} else {
-			aleks.setPos(w/2f - colWidth/2f, shpx.bottom()+6);
+			aleks.setPos(w/2f - colWidth/2f, shpx.bottom()+14);
 		}
 		content.add(aleks);
 
