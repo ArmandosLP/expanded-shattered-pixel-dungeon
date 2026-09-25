@@ -252,6 +252,7 @@ public class HallsBossLevel extends Level {
 	@Override
 	public void seal() {
 		super.seal();
+		Statistics.qualifiedForApotheosis = true;
 		Statistics.qualifiedForBossChallengeBadge = true;
 		int entrance = entrance();
 		set( entrance, Terrain.EMPTY_SP );

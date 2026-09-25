@@ -134,7 +134,7 @@ public class SoulPactRoom extends SpecialRoom {
         @Override
         public String desc(int tileX, int tileY) {
             // If by any chance the tile is inspected outside gameplay
-            if (Dungeon.level == null){
+            if (Dungeon.level != null){
 
                 int cell = this.tileX+1 + (this.tileY + 1)*Dungeon.level.width();
                 if (Mob.findChar(cell) instanceof WanderingImp){

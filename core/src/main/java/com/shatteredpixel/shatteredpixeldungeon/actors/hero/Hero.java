@@ -79,6 +79,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Snake;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -501,6 +502,15 @@ public class Hero extends Char {
 		boolean hit = attack( enemy );
 		Invisibility.dispel();
 		belongings.thrownWeapon = null;
+
+        if (hit && Dungeon.depth == 25 && Statistics.qualifiedForApotheosis){
+            for (Mob m : Dungeon.level.mobs){
+                if (m instanceof YogDzewa){
+                    Statistics.qualifiedForApotheosis = false;
+                    break;
+                }
+            }
+        }
 
 		if (hit && subClass == HeroSubClass.GLADIATOR && wasEnemy){
 			Buff.affect( this, Combo.class ).hit( enemy );
@@ -1672,6 +1682,15 @@ public class Hero extends Char {
 				|| buff(TimeStasis.class) != null) {
 			return;
 		}
+
+        if (Dungeon.depth == 25 && Statistics.qualifiedForApotheosis){
+            for (Mob m : Dungeon.level.mobs){
+                if (m instanceof YogDzewa){
+                    Statistics.qualifiedForApotheosis = false;
+                    break;
+                }
+            }
+        }
 
 		//regular damage interrupt, triggers on any damage except specific mild DOT effects
 		// unless the player recently hit 'continue moving', in which case this is ignored

@@ -135,7 +135,7 @@ public class Badges {
 		HIGH_SCORE_2                ( 57 ),
         JUST_A_PIECE                ( 144 ), // Expanded mod
         SOUL_PACT                   ( 152 ), // Expanded mod
-        TOXIC_RELATIONSHIP          ( 153 ), // Expanded mod
+//        TOXIC_RELATIONSHIP          ( 153 ), // Expanded mod
 		ENEMY_HAZARDS               ( 64 ),
 		PIRANHAS                    ( 65 ),
 		GRIM_WEAPON                 ( 66 ),
@@ -352,11 +352,17 @@ public class Badges {
 	}
 
     //--------------------------- EXPANDED ---------------------------//
-    public static void validateToxicRelationship() {
-        Badge badge = Badge.TOXIC_RELATIONSHIP;
+    public static void validateApotheosis(){
+        Badge badge = Badge.APOTHEOSIS;
         local.add( badge );
         displayBadge( badge );
     }
+
+//    public static void validateToxicRelationship() {
+//        Badge badge = Badge.TOXIC_RELATIONSHIP;
+//        local.add( badge );
+//        displayBadge( badge );
+//    }
 
     public static void validateSoulPact() {
         if (local.contains( Badge.SOUL_PACT ) || Dungeon.hero == null) return;

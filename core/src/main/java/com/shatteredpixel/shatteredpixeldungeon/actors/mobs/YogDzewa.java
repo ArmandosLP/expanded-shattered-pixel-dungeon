@@ -159,6 +159,10 @@ public class YogDzewa extends Mob {
 
 	@Override
 	protected boolean act() {
+        if (Dungeon.hero.belongings.weapon != null || Dungeon.hero.belongings.armor != null){
+            Statistics.qualifiedForApotheosis = false;
+        }
+
 		//char logic
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
@@ -533,6 +537,10 @@ public class YogDzewa extends Mob {
 		updateVisibility(Dungeon.level);
 
 		GameScene.bossSlain();
+        
+        if (Statistics.qualifiedForBossChallengeBadge){
+            Badges.validateApotheosis();
+        }
 
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) && Statistics.spawnersAlive == 4){
 			Badges.validateBossChallengeCompleted();
