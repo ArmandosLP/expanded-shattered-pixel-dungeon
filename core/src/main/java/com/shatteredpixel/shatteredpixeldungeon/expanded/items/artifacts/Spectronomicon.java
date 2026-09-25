@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.levels.MiningLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -462,6 +463,10 @@ public class Spectronomicon extends Artifact {
 
         @Override
         protected boolean act() {
+            if (Dungeon.level.heroFOV[pos]){
+                Bestiary.setSeen(getClass());
+            }
+
             Char master = (Char) findById(masterID);
 
             if (enemy != null && enemy instanceof Mob){
