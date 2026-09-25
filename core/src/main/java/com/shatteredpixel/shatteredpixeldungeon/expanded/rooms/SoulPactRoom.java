@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.expanded.rooms;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -34,6 +35,11 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.custom.Carpet;
+import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.Tilemap;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
@@ -86,7 +92,15 @@ public class SoulPactRoom extends SpecialRoom {
 		
 		Painter.fill( level, this, Terrain.WALL );
 		Painter.fill( level, this, 1, Terrain.EMPTY );
-		Painter.fill( level, this, 2, Terrain.EMPTY_SP );
+
+        Carpet carpet = new Carpet();
+        carpet.setRect(left+1, top+1, width()-2, height()-2);
+        level.customTiles.add(carpet);
+
+        Point c = center();
+        SoulPactRoomDeco deco = new SoulPactRoomDeco();
+        deco.pos(c.x - 1, c.y - 1);
+        level.customTiles.add(deco);
 
 		placeShopkeeper( level );
 
@@ -97,6 +111,46 @@ public class SoulPactRoom extends SpecialRoom {
 		}
 
 	}
+
+    public static class SoulPactRoomDeco extends CustomTilemap {
+
+        {
+            texture = Assets.Environment.SOUL_PACT_ROOM;
+            tileW = tileH = 3;
+        }
+
+        final int TEX_WIDTH = 192;
+
+        @Override
+        public Tilemap create() {
+            if (vis != null && vis.alive) vis.killAndErase();
+            vis = new Tilemap(texture, new TextureFilm( texture, SIZE, SIZE ));
+            vis.map(mapSimpleImage(3, 3, TEX_WIDTH), 3);
+            vis.x = tileX*SIZE;
+            vis.y = tileY*SIZE;
+            return vis;
+        }
+
+        @Override
+        public String desc(int tileX, int tileY) {
+            // If by any chance the tile is inspected outside gameplay
+            if (Dungeon.level == null){
+
+                int cell = this.tileX+1 + (this.tileY + 1)*Dungeon.level.width();
+                if (Mob.findChar(cell) instanceof WanderingImp){
+                    return Messages.get(this, "wanderer_desc");
+                }
+
+            }
+            return Messages.get(this, "desc");
+        }
+
+        @Override
+        public String name(int tileX, int tileY) {
+            return Messages.get(this, "name");
+        }
+    }
+
 
 	protected void placeShopkeeper( Level level ) {
 
@@ -182,6 +236,7 @@ public class SoulPactRoom extends SpecialRoom {
 	}
 
     public static SoulPactRoom pactForFloor(int depth){
+        if (true) return new SoulPactRoom();
         if (depth <= 4){
             // 1% chance for pact in the sewers
             if (Random.Int(100) == 0) return new SoulPactRoom();
