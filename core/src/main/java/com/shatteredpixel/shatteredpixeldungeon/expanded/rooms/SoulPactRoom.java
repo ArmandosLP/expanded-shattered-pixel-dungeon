@@ -236,7 +236,6 @@ public class SoulPactRoom extends SpecialRoom {
 	}
 
     public static SoulPactRoom pactForFloor(int depth){
-        if (true) return new SoulPactRoom();
         if (depth <= 4){
             // 1% chance for pact in the sewers
             if (Random.Int(100) == 0) return new SoulPactRoom();
