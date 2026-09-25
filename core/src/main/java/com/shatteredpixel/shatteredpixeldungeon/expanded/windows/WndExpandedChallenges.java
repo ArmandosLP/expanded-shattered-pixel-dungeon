@@ -70,7 +70,8 @@ public class WndExpandedChallenges extends Window {
 			
 			CheckBox cb = new CheckBox( Messages.titleCase(Messages.get(ExpandedChallenges.class, challenge)) );
 			cb.checked( (checked & ExpandedChallenges.MASKS[i]) != 0 );
-			cb.active = editable;
+//			cb.active = editable;
+            cb.active = false;  // Not available for now
 
 			if (i > 0) {
 				pos += GAP;
