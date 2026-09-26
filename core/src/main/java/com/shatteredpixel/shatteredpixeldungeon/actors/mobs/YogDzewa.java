@@ -538,7 +538,7 @@ public class YogDzewa extends Mob {
 
 		GameScene.bossSlain();
         
-        if (Statistics.qualifiedForBossChallengeBadge){
+        if (Statistics.qualifiedForApotheosis){
             Badges.validateApotheosis();
         }
 
