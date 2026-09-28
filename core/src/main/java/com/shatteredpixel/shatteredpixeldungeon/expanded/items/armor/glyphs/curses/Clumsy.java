@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.expanded.items.armor.glyphs.cur
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Levitation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
@@ -53,7 +54,7 @@ public class Clumsy extends Armor.Glyph {
 
 	//more of a reduction really
 	public static void movementProc( Char ch, int level ){
-        if (level == -1 || ch.buff(MagicImmune.class) != null) return;
+        if (level == -1 || ch.buff(MagicImmune.class) != null || ch.buff(Levitation.class) != null) return;
 
         // Normally 1
         // Ring of arcana +4 - 2
