@@ -46,9 +46,8 @@ public class Vitality extends Armor.Glyph {
         // lvl 0 - 10%
         // lvl 1 - 18%
         // lvl 2 - 25%
-        // if active Retained Vitality - 100%
         float procChance = (level+1f)/(level+10f) * procChanceMultiplier(defender);
-        if (defender.buff(RetainedVitality.class) != null || Random.Float() < procChance) {
+        if (Random.Float() < procChance) {
             Sample.INSTANCE.play(Assets.Sounds.DRINK, 1, Random.Float(1.8f, 2f));
             Sample.INSTANCE.play(Assets.Sounds.BADGE, 0.5f, Random.Float(0.8f, 1f));
             defender.sprite.emitter().burst(BloodParticle.BURST, 8);
