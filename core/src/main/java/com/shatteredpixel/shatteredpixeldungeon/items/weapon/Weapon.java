@@ -86,6 +86,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -605,12 +606,16 @@ abstract public class Weapon extends KindOfWeapon {
 			return false;
 		}
 
+        public long setID = new SecureRandom().nextLong();
+        public static final String SET_ID = "SET_ID";
 		@Override
 		public void restoreFromBundle( Bundle bundle ) {
+            setID = bundle.getLong(SET_ID);
 		}
 
 		@Override
 		public void storeInBundle( Bundle bundle ) {
+            bundle.put(SET_ID, setID);
 		}
 		
 		public abstract ItemSprite.Glowing glowing();

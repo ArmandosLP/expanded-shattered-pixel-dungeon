@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.expanded.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -33,7 +34,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.sprites.WeakWraithSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -246,6 +246,7 @@ public class Spectronomicon extends Artifact {
                     }else{
                         upgrade();
                     }
+                    Statistics.consumedEnchants.add(it.enchantment.setID); // Avoids missile weapon enchantment consume exploit
                     it.enchant(null);
                 }else{
                     GLog.i( Messages.get(Spectronomicon.class, "consume_no_magic") );
@@ -268,6 +269,7 @@ public class Spectronomicon extends Artifact {
                 }
             }
 
+            updateQuickslot();
             Hero hero = Dungeon.hero;
             hero.sprite.operate( hero.pos );
             hero.busy();

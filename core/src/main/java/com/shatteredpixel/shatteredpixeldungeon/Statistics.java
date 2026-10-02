@@ -41,6 +41,9 @@ public class Statistics {
 	//tracks every item type 'seen' this run (i.e. would be added to catalogs)
 	public static HashSet<Class> itemTypesDiscovered = new HashSet<>();
 
+    // Avoids missile weapon enchantment consume exploit
+    public static HashSet<Long> consumedEnchants = new HashSet<>();
+
 	//These are used for score calculation
 	// some are built incrementally, most are assigned when full score is calculated
 	public static int progressScore;
@@ -91,6 +94,7 @@ public class Statistics {
 		hazardAssistedKills = 0;
 		ankhsUsed		= 0;
 		itemTypesDiscovered.clear();
+        consumedEnchants.clear();
 
 		progressScore   = 0;
 		heldItemValue   = 0;
@@ -156,6 +160,8 @@ public class Statistics {
 
 	private static final String ITEM_TYPES_DISCOVERED    = "item_types_discovered";
 
+    private static final String CONSUMED_ENCHANTS    = "consumed_enchants";
+
 	private static final String SPAWNERS	= "spawnersAlive";
 	
 	private static final String DURATION	= "duration";
@@ -181,6 +187,13 @@ public class Statistics {
 		bundle.put(HAZARD_ASSISTS, hazardAssistedKills);
 		bundle.put( ANKHS,		ankhsUsed );
 		bundle.put( ITEM_TYPES_DISCOVERED, itemTypesDiscovered.toArray(new Class<?>[0]) );
+
+        long[] setIDs = new long[consumedEnchants.size()];
+        int l = 0;
+        for (Long ID : consumedEnchants){
+            setIDs[l++] = ID;
+        }
+        bundle.put( CONSUMED_ENCHANTS, setIDs);
 
 		bundle.put( PROG_SCORE,  progressScore );
 		bundle.put( ITEM_VAL,    heldItemValue );
@@ -234,6 +247,14 @@ public class Statistics {
 		} else {
 			itemTypesDiscovered.clear();
 		}
+
+        if (bundle.contains( CONSUMED_ENCHANTS )) {
+            for (long setID : bundle.getLongArray(CONSUMED_ENCHANTS)){
+                consumedEnchants.add(setID);
+            }
+        } else {
+            consumedEnchants.clear();
+        }
 
 		progressScore   = bundle.getInt( PROG_SCORE );
 		heldItemValue   = bundle.getInt( ITEM_VAL );

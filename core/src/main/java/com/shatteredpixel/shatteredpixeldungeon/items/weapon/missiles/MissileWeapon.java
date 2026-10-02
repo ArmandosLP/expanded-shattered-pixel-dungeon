@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -180,6 +181,9 @@ abstract public class MissileWeapon extends Weapon {
 	
 	@Override
 	public boolean collect(Bag container) {
+        if (enchantment != null && Statistics.consumedEnchants.contains(enchantment.setID)){
+            enchant(null);
+        }
 		if (container instanceof MagicalHolster) holster = true;
 		return super.collect(container);
 	}

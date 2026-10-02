@@ -145,11 +145,13 @@ public class Explosive extends Weapon.Enchantment {
 
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
 		durability = bundle.getInt(DURABILITY);
 	}
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle(bundle);
 		bundle.put(DURABILITY, durability);
 	}
 

@@ -198,6 +198,7 @@ public class Crystal extends Weapon.Enchantment {
 
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
+		super.restoreFromBundle(bundle);
 		durability = bundle.getFloat(DURABILITY);
 		visualDurability = bundle.getFloat(VISUAL_DUR);
 		thrownWeapon = bundle.getBoolean(THROWN_WEP);
@@ -205,6 +206,7 @@ public class Crystal extends Weapon.Enchantment {
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
+		super.storeInBundle(bundle);
 		bundle.put(DURABILITY, durability);
 		bundle.put(VISUAL_DUR, visualDurability);
 		bundle.put(THROWN_WEP, thrownWeapon);
