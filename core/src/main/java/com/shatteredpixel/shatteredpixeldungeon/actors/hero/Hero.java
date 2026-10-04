@@ -1660,8 +1660,7 @@ public class Hero extends Char {
 
 	@Override
 	public int glyphLevel(Class<? extends Armor.Glyph> cls) {
-        Spectronomicon book = belongings.getItem(Spectronomicon.class);
-        if (book != null && book.isEquipped(this) && book.cursed) {
+        if (Spectronomicon.curseProc(this)){
             return -1;
         }
 

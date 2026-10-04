@@ -137,8 +137,7 @@ abstract public class Weapon extends KindOfWeapon {
 	
 	@Override
 	public int proc( Char attacker, Char defender, int damage ) {
-
-		if (attacker.buff(MagicImmune.class) == null) {
+		if (attacker.buff(MagicImmune.class) == null && !Spectronomicon.curseProc(attacker)) {
 			Enchantment trinityEnchant = null;
 			//only when it's the hero or a char that uses the hero's weapon
 			if (Dungeon.hero.buff(BodyForm.BodyFormBuff.class) != null && this instanceof MeleeWeapon
@@ -548,13 +547,6 @@ abstract public class Weapon extends KindOfWeapon {
 		}
 
 		public static float genericProcChanceMultiplier( Char attacker ){
-            if (attacker instanceof Hero){
-                Spectronomicon book = ((Hero) attacker).belongings.getItem(Spectronomicon.class);
-                if (book != null && book.isEquipped((Hero) attacker) && book.cursed) {
-                    return 0;
-                }
-            }
-
 			float multi = RingOfArcana.enchantPowerMultiplier(attacker);
 			Berserk rage = attacker.buff(Berserk.class);
 			if (rage != null) {

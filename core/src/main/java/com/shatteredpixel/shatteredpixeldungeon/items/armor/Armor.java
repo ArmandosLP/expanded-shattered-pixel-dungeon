@@ -499,8 +499,7 @@ public class Armor extends EquipableItem {
 	}
 	
 	public int proc( Char attacker, Char defender, int damage ) {
-
-		if (defender.buff(MagicImmune.class) == null) {
+		if (defender.buff(MagicImmune.class) == null && !Spectronomicon.curseProc(defender)) {
 			Glyph trinityGlyph = null;
 			//only when it's the hero or a char that uses the hero's armor
 			if (Dungeon.hero.buff(BodyForm.BodyFormBuff.class) != null
@@ -829,13 +828,6 @@ public class Armor extends EquipableItem {
 		}
 
 		public static float genericProcChanceMultiplier( Char defender ){
-            if (defender instanceof Hero){
-                Spectronomicon book = ((Hero) defender).belongings.getItem(Spectronomicon.class);
-                if (book != null && book.isEquipped((Hero) defender) && book.cursed) {
-                    return 0;
-                }
-            }
-
 			float multi = RingOfArcana.enchantPowerMultiplier(defender);
 
 			if (Dungeon.hero.alignment == defender.alignment

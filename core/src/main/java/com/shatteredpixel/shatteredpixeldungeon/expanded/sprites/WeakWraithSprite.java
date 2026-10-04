@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.expanded.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
 import com.watabou.noosa.TextureFilm;
 
@@ -47,7 +48,15 @@ public class WeakWraithSprite extends MobSprite {
 		
 		play( idle );
 	}
-	
+
+    @Override
+    public void die() {
+        if (visible) {
+            emitter().burst(ShadowParticle.UP, 5);
+        }
+        super.die();
+    }
+
 	@Override
 	public int blood() {
 		return 0x88000000;

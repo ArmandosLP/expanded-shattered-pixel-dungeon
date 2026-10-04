@@ -64,9 +64,7 @@ public class Spectronomicon extends Artifact {
 
 	{
         image = ItemSpriteSheet.SPECTERNOMICON;
-
 		levelCap = 10;
-
         exp = 0;
         charge = (level()/2)+2;
         partialCharge = 0;
@@ -116,6 +114,17 @@ public class Spectronomicon extends Artifact {
                 summon(cell + c);
             }
         }
+    }
+
+    public static boolean curseProc(Char ch){
+        if (ch instanceof Hero){
+            Hero hero = (Hero) ch;
+            Spectronomicon book = hero.belongings.getItem(Spectronomicon.class);
+            if (book != null && book.isEquipped(hero) && book.cursed) {
+                return true;
+            }
+        }
+        return false;
     }
 
 	@Override
@@ -295,8 +304,8 @@ public class Spectronomicon extends Artifact {
                     && !cursed
                     && target.buff(MagicImmune.class) == null
                     && Regeneration.regenOn()) {
-                //120 turns to charge at full, 80 turns to charge at 0/8
-                float chargeGain = 1 / (120f - (chargeCap - charge)*5f);
+                //90 turns to charge at full, 60 turns to charge at 0/6
+                float chargeGain = 1 / (90f - (chargeCap - charge)*5f);
                 chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
                 partialCharge += chargeGain;
 
@@ -381,23 +390,21 @@ public class Spectronomicon extends Artifact {
             spriteClass = WeakWraithSprite.class;
             alignment = Alignment.ALLY;
             defenseSkill = 0;
+            actPriority = MOB_PRIO - 1; // Act after mobs to be able to aggro after they move
         }
 
-        private static final float SPAWN_DELAY	= 2f;
+        public static int BASE_TIME_TO_LIVE = 5;
         protected int masterID;
         protected int timeToLive;
+        protected int targetID = -1;
 
         public static void spawn(int cell, Char master){
-            spawn(cell,master,3);
-        }
-
-        public static void spawn(int cell, Char master, int timeToLive){
-            WeakWraith ww = new WeakWraith();;
+            WeakWraith ww = new WeakWraith();
             ww.masterID = master.id();
 
             ww.pos = cell;
-            ww.timeToLive = timeToLive;
-            GameScene.add( ww, SPAWN_DELAY );
+            ww.timeToLive = BASE_TIME_TO_LIVE;
+            GameScene.add( ww );
             Dungeon.level.occupyCell(ww);
 
             ww.fieldOfView = new boolean[Dungeon.level.length()];
@@ -413,13 +420,20 @@ public class Spectronomicon extends Artifact {
                         !mob.isCharmedBy(master) &&
                         !(ww.mobTaget(mob) instanceof WeakWraith))
                 {
-                    // Save the closest mob, if both mobs are equally close, choose one randomly
-                    int dist = ww.distance(mob);
-                    if (dist < distToMob){
+
+                    // Prioritize enemies visible by master
+                    if (mobToAgro != null && !master.fieldOfView[mobToAgro.pos] && master.fieldOfView[mob.pos]){
+                        int dist = ww.distance(mob);
                         mobToAgro = mob;
                         distToMob = dist;
-                    } else if (dist == distToMob && Random.Int(2) == 0) {
+                        continue;
+                    }
+
+                    // Save the closest mob, if both mobs are equally close, choose one randomly
+                    int dist = ww.distance(mob);
+                    if (dist < distToMob || ( dist == distToMob && Random.Int(2) == 0) ){
                         mobToAgro = mob;
+                        distToMob = dist;
                     }
                 }
             }
@@ -443,24 +457,18 @@ public class Spectronomicon extends Artifact {
             mob.clearEnemy();
             mob.beckon(pos);
             mob.aggro(this);
+            targetID = mob.id();
         }
 
         @Override
-        public void die(Object cause) {
-            super.die(cause);
-            sprite.emitter().burst(ShadowParticle.UP, 5);
-        }
-
-        private Char mobTaget(Mob mob){
-            if (mob.isTargeting(null)){ return null; }
-
-            for (Mob m : Dungeon.level.mobs.toArray( new Mob[0] )) {
-                if (mob.isTargeting(m)){
-                    return m;
-                }
+        protected Char chooseEnemy() {
+            Char enemy = super.chooseEnemy();
+            // If not target was assigned on spawn choose the first enemy
+            if (targetID == -1 && enemy instanceof Mob){
+                agroMob((Mob) enemy);
             }
-
-            return null;
+            sprite.hideAlert();
+            return enemy;
         }
 
         @Override
@@ -469,41 +477,60 @@ public class Spectronomicon extends Artifact {
                 Bestiary.setSeen(getClass());
             }
 
-            Char master = (Char) findById(masterID);
+            sprite.hideAlert();
+            boolean result = super.act();
 
-            if (enemy != null && enemy instanceof Mob){
-                Char enemyTarget = mobTaget((Mob) enemy);
-                if (enemyTarget != null && !(enemyTarget instanceof WeakWraith)){
-                    agroMob((Mob)enemy);;
-                }
+            Char target = (Char) findById(targetID);
+            if (target == null || !target.isAlive()){
+                timeToLive -= 1;
+            }else{
+                timeToLive = 5;
             }
 
+            Char master = (Char) findById(masterID);
             if ((master == null || !master.isAlive()) || timeToLive <= 0){
                 die(null);
                 return true;
             }
-            if (enemy == null){ timeToLive -= 1; }
-            return super.act();
+
+            return result;
         }
 
-        // Extremely weak, not intended for combat
         @Override
-        protected boolean canAttack(Char enemy) {
+        protected boolean getCloser(int target) {
             return false;
         }
 
         @Override
-        public int attackSkill( Char target ) {
-            return 0;
+        protected boolean canAttack(Char enemy) {
+            return false; // Not intended for combat
+        }
+
+        @Override
+        public int defenseSkill(Char enemy) {
+            return 0; // Not intended for combat
+        }
+
+        // FIXME This would not be necessary if mob had a get target method
+        private Char mobTaget(Mob mob){
+            if (mob.isTargeting(null)){ return null; }
+            for (Mob m : Dungeon.level.mobs.toArray( new Mob[0] )) {
+                if (mob.isTargeting(m)){
+                    return m;
+                }
+            }
+            return null;
         }
 
         private static final String TIME_TO_LIVE = "time_to_live";
         private static final String MASTER_ID = "master_id";
+        private static final String TARGET_ID = "target_id";
 
         @Override
         public void storeInBundle(Bundle bundle) {
             super.storeInBundle(bundle);
             bundle.put(MASTER_ID, masterID);
+            bundle.put(TARGET_ID, targetID);
             bundle.put(TIME_TO_LIVE,timeToLive);
         }
 
@@ -511,6 +538,7 @@ public class Spectronomicon extends Artifact {
         public void restoreFromBundle(Bundle bundle) {
             super.restoreFromBundle(bundle);
             masterID = bundle.getInt(MASTER_ID);
+            targetID = bundle.getInt(TARGET_ID);
             timeToLive = bundle.getInt(TIME_TO_LIVE);
         }
     }
