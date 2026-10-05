@@ -218,7 +218,12 @@ public class Statue extends Mob {
                 statue = new Statue();
             }
 		}
-		statue.createWeapon(useDecks);
+
+		//calls to RNG vary based on statue type, which is influenced by rat skull
+		Random.pushGenerator(Random.Long());
+			statue.createWeapon(useDecks);
+		Random.popGenerator();
+
 		return statue;
 	}
 	
