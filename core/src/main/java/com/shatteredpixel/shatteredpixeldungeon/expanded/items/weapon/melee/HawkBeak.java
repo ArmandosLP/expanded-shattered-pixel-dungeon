@@ -62,7 +62,7 @@ public class HawkBeak extends MeleeWeapon {
     @Override
     public int max(int lvl) {
         return  (4 * tier) - 1 +  //base: 15 dmg
-                ((int) (lvl*2.5f));   //level scaling: 2 or 3 dmg
+                ((int) (lvl*2f));   //level scaling: 2 dmg
     }
 
 
