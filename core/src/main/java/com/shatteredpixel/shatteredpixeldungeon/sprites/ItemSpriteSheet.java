@@ -59,7 +59,7 @@ public class ItemSpriteSheet {
     private static final int XP_WEP   = xy(1, 37);   //18 slots
     public static final int MORNING_STAR    = XP_WEP + 0;
     public static final int ZWEIHANDER      = XP_WEP + 1;
-    public static final int HAWKBEAK      = XP_WEP + 2;
+    public static final int HAWKBEAK        = XP_WEP + 2; // halberd
 
     static{
         assignItemRect(MORNING_STAR,    15, 15);
