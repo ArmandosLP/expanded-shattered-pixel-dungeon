@@ -123,12 +123,9 @@ public class SoulPactRoom extends SpecialRoom {
 
         @Override
         public Tilemap create() {
-            if (vis != null && vis.alive) vis.killAndErase();
-            vis = new Tilemap(texture, new TextureFilm( texture, SIZE, SIZE ));
-            vis.map(mapSimpleImage(3, 3, TEX_WIDTH), 3);
-            vis.x = tileX*SIZE;
-            vis.y = tileY*SIZE;
-            return vis;
+            Tilemap v = super.create();
+            v.map(mapSimpleImage(3, 3, TEX_WIDTH), 3);
+            return v;
         }
 
         @Override
