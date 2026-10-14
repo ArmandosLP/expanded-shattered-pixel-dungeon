@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.quest.vault.VaultBossElemental;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger.StrongElemental;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
@@ -416,7 +417,7 @@ abstract public class MissileWeapon extends Weapon {
 		decrementDurability();
 		if (durability > 0 && !spawnedForEffect){
 			//ALL projectiles stick to the vault boss elemental, as it has custom logic for it
-			boolean doesStick = sticky || enemy instanceof VaultBossElemental;
+			boolean doesStick = sticky || enemy instanceof VaultBossElemental || enemy instanceof StrongElemental.StrongFrostElemental;
 			//attempt to stick the missile weapon to the enemy, just drop it if we can't.
 			if (doesStick && enemy != null && enemy.isActive() && enemy.alignment != Char.Alignment.ALLY){
 				PinCushion p = Buff.affect(enemy, PinCushion.class);
