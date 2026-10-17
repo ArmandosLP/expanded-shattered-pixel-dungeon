@@ -496,7 +496,7 @@ public abstract class Char extends Actor {
 			}
 
             if ( buff(ShamanBlessing.Red.class) != null ){
-                dmg *= 0.67f;
+                dmg *= 1.34f;
             }
 
 			if ( buff(Weakness.class) != null ){
