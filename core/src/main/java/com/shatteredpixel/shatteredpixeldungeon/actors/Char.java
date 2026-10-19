@@ -100,6 +100,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.blobs.DemonicFlame;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.DemonicFire;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Sticky;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Ferocity;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Frenzy;
@@ -438,6 +440,13 @@ public abstract class Char extends Actor {
 					enemy.damage(5+Dungeon.hero.lvl, GuidingLight.INSTANCE);
 				}
 			}
+
+            if (buff(DemonicFire.class) != null &&
+                    properties.contains(Property.DEMONIC) &&
+                    !enemy.properties.contains(Property.DEMONIC)) // Avoid infinite healing loop if two demons are fighting
+            {
+                DemonicFlame.burn(enemy);
+            }
 
 			Berserk berserk = buff(Berserk.class);
 			if (berserk != null) dmg = berserk.damageFactor(dmg);
@@ -1089,6 +1098,7 @@ public abstract class Char extends Actor {
 				icon = FloatingText.PHYS_DMG_NO_BLOCK;
 			}
 
+			if (src instanceof DemonicFire)                             icon = FloatingText.DEMONIC_FIRE;
 			if (src instanceof Hunger)                                  icon = FloatingText.HUNGER;
 			if (src instanceof Burning)                                 icon = FloatingText.BURNING;
 			if (src instanceof Chill || src instanceof Frost)           icon = FloatingText.FROST;
@@ -1440,6 +1450,7 @@ public abstract class Char extends Actor {
 		}
 		if (glyphLevel(Brimstone.class) >= 0){
 			immunes.add(Burning.class);
+            immunes.add(DemonicFire.class);
 		}
 		
 		for (Class c : immunes){

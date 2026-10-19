@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.TorchHalo;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.effects.particles.DemonicFlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -86,7 +87,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public boolean visibleOutOfFFOV = false;
 
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, GLOWING, AURA
+		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, GLOWING, AURA, DEMONIC_FLAME,
 	}
 	
 	protected Animation idle;
@@ -99,7 +100,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected Callback animCallback;
 	
 	protected PosTweener motion;
-	
+
+    protected Emitter demonicFlame;
 	protected Emitter burning;
 	protected Emitter chilled;
 	protected Emitter marked;
@@ -464,6 +466,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					aura.show(this, 0);
 				}
 				break;
+            case DEMONIC_FLAME:
+                if (demonicFlame != null) demonicFlame.on = false;
+                demonicFlame = emitter();
+                demonicFlame.pour(DemonicFlameParticle.FACTORY, 0.02f);
+                break;
 		}
 	}
 
@@ -568,6 +575,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					aura = null;
 				}
 				break;
+            case DEMONIC_FLAME:
+                if (demonicFlame != null) {
+                    demonicFlame.on = false;
+                    demonicFlame = null;
+                }
 		}
 	}
 	
@@ -622,6 +634,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		if (hearts != null) {
 			hearts.visible = visible;
 		}
+        if (demonicFlame != null) {
+            demonicFlame.visible = visible;
+        }
+
 		//shield fx updates its own visibility
 		if (aura != null) {
 			if (aura.parent == null) {

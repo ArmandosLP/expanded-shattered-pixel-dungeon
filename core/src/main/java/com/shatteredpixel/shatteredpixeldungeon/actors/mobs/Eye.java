@@ -82,9 +82,9 @@ public class Eye extends Mob {
 		return super.drRoll() + Random.NormalIntRange(0, 10);
 	}
 	
-	private Ballistica beam;
-	private int beamTarget = -1;
-	private int beamCooldown;
+	protected Ballistica beam;
+	protected int beamTarget = -1;
+	protected int beamCooldown;
 	public boolean beamCharged;
 
 	@Override

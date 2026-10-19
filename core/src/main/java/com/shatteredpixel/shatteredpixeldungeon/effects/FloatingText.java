@@ -76,6 +76,11 @@ public class FloatingText extends RenderedTextBlock {
 
 	public static int NO_ICON   = -1;
 
+    // ------------- EXPANDED MOD ------------- //
+    public static int DEMONIC_FIRE      = 126;
+
+    // ---------------------------------------- //
+
 	//combat damage icons
 	public static int PHYS_DMG          = 0;
 	public static int PHYS_DMG_NO_BLOCK = 1;

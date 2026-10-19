@@ -47,6 +47,7 @@ public class BuffIndicator extends Component {
 
     // ----------------------------------- EXPANDED CONTENT ----------------------------------- //
 
+    public static final int DEMONIC_FIRE = 107;
     public static final int OVERCHARGE = 108;
     public static final int RETAINED_VITALITY = 109;
     public static final int WILLING_SACRIFICE = 110;
