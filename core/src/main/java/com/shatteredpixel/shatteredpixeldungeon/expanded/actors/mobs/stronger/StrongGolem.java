@@ -31,11 +31,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SpectralWallParticle;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.sprites.StrongGolemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SkeletonKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -215,7 +216,7 @@ public class StrongGolem extends Mob {
             if (
                     Actor.findChar( p ) == null &&
                     (Dungeon.level.map[p] == Terrain.DOOR || Dungeon.level.map[p] == Terrain.OPEN_DOOR) &&
-                    (Dungeon.level.blobs.get(SkeletonKey.KeyWall.class) == null || Dungeon.level.blobs.get(SkeletonKey.KeyWall.class).cur[p] <= 0)
+                    (Dungeon.level.blobs.get(GolemWall.class) == null || Dungeon.level.blobs.get(GolemWall.class).cur[p] <= 0)
             ) {
                 door = p;
                 break;
@@ -229,9 +230,9 @@ public class StrongGolem extends Mob {
         Level.set( doorPos, Terrain.OPEN_DOOR );
         GameScene.updateMap( doorPos );
 
-        Blob wall = Dungeon.level.blobs.get(SkeletonKey.KeyWall.class);
+        Blob wall = Dungeon.level.blobs.get(GolemWall.class);
         if (!Dungeon.level.solid[doorPos] || (wall != null && wall.cur[doorPos] > 0)) {
-            GameScene.add(Blob.seed(doorPos, 20, SkeletonKey.KeyWall.class));
+            GameScene.add(Blob.seed(doorPos, 20, GolemWall.class));
         }
 
         if (Dungeon.level.heroFOV[doorPos]) {
@@ -255,7 +256,7 @@ public class StrongGolem extends Mob {
             if (
                     Actor.findChar( p ) == null &&
                     (Dungeon.level.map[p] == Terrain.DOOR || Dungeon.level.map[p] == Terrain.OPEN_DOOR) &&
-                    (Dungeon.level.blobs.get(SkeletonKey.KeyWall.class) == null || Dungeon.level.blobs.get(SkeletonKey.KeyWall.class).cur[p] <= 0)
+                    (Dungeon.level.blobs.get(GolemWall.class) == null || Dungeon.level.blobs.get(GolemWall.class).cur[p] <= 0)
             ) {
                 doorPos = p;
                 break;
@@ -371,5 +372,94 @@ public class StrongGolem extends Mob {
 			}
 		}
 	}
+
+    public static class GolemWall extends Blob {
+
+        {
+            alwaysVisible = true;
+        }
+
+        @Override
+        protected void evolve() {
+            int cell;
+            boolean cellEnded = false;
+
+            Level l = Dungeon.level;
+            for (int i = area.left; i < area.right; i++){
+                for (int j = area.top; j < area.bottom; j++){
+                    cell = i + j*l.width();
+                    off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
+
+                    if (cur[cell] > 0 && off[cell] == 0){
+                        cellEnded = true;
+                    }
+
+                    //caps at 10 turns
+                    off[cell] = Math.min(off[cell], 9);
+
+                    volume += off[cell];
+
+                    if (off[cell] == 0 && cur[cell] > 0){
+                        cellsToFlagUpdate.add(cell);
+                    }
+                }
+            }
+
+            if (cellEnded){
+                Dungeon.observe();
+            }
+        }
+
+        @Override
+        public void seed(Level level, int cell, int amount) {
+            super.seed(level, cell, amount);
+            level.updateCellFlags(cell);
+        }
+
+        @Override
+        public void clear(int cell) {
+            super.clear(cell);
+            if (cur == null) return;
+            Dungeon.level.updateCellFlags(cell);
+        }
+
+        @Override
+        public void fullyClear() {
+            super.fullyClear();
+            Dungeon.level.buildFlagMaps();
+        }
+
+        @Override
+        public void onBuildFlagMaps(Level l) {
+            if (volume > 0){
+                for (int i=0; i < l.length(); i++) {
+                    onUpdateCellFlags(l, i);
+                }
+            }
+        }
+
+        @Override
+        public void onUpdateCellFlags(Level l, int cell) {
+            if (volume > 0 && cur[cell] > 0) {
+                l.losBlocking[cell] =  true;
+                l.solid[cell] = true;
+                l.passable[cell] = false;
+                l.avoid[cell] = false;
+                //openSpace will be updated as part of updating flags in Level
+            }
+        }
+
+        @Override
+        public void use(BlobEmitter emitter) {
+            super.use( emitter );
+            emitter.pour(SpectralWallParticle.FACTORY, 0.05f );
+        }
+
+        @Override
+        public String tileDesc() {
+            return Messages.get(this, "desc");
+        }
+
+    }
 
 }
