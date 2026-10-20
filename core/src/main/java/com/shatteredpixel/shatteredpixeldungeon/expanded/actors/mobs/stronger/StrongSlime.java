@@ -24,7 +24,6 @@ package com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.stronger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Slime;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Swarm;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Sticky;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SlimeSprite;
@@ -49,11 +48,6 @@ public class StrongSlime extends Slime {
     @Override
     public String description() {
         return super.description() + "\n\n" + Messages.get(this, "talent");
-    }
-
-    @Override
-    public String name() {
-        return Messages.get(Swarm.class, "name");
     }
 
 }
