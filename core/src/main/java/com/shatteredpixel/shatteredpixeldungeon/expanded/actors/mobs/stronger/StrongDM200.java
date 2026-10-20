@@ -28,13 +28,15 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM100;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM200;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.sprites.StrongDM200Sprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -55,12 +57,18 @@ public class StrongDM200 extends DM200 {
         if (result && overcharged) {
             Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
 
-            enemy.damage(Random.IntRange(5, 8), new Shocking());
+            enemy.damage(Random.IntRange(5, 8), new DM100.LightningBolt());
             enemy.sprite.centerEmitter().burst(SparkParticle.FACTORY, 3);
             enemy.sprite.flash();
+
             if (enemy instanceof Hero){
-                Badges.validateDeathFromEnemyMagic();
-                Dungeon.fail(this);
+                PixelScene.shake( 1, 0.3f );
+
+                if (!enemy.isAlive()) {
+                    Badges.validateDeathFromEnemyMagic();
+                    Dungeon.fail(this);
+                    GLog.n( Messages.get(DM100.class, "zap_kill") );
+                }
             }
 
         }
