@@ -282,6 +282,7 @@ public class Assets {
         public static final String STRONG_WARLOCK  = "sprites/strong_warlock.png";
         public static final String STRONG_PIRANHA  = "sprites/strong_piranha.png";
         public static final String WEAK_WRAITH     = "sprites/weak_wraith.png";
+        public static final String GOLDEN_SKELETON = "sprites/golden_skeleton.png";
 
 
 		public static final String ITEMS        = "sprites/items.png";

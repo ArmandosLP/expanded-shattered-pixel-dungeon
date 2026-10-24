@@ -110,6 +110,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.quest.vault.VaultGho
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.quest.vault.VaultGolem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.quest.vault.VaultShaman;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.quest.vault.VaultSkeleton;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.GoldenSkeleton;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.npc.WanderingImp;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.artifacts.Spectronomicon;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
@@ -235,7 +236,7 @@ public enum Bestiary {
 		UNIVERSAL.addEntities(Wraith.class, Piranha.class, Mimic.class, GoldenMimic.class, EbonyMimic.class, Statue.class, GuardianTrap.Guardian.class, SentryRoom.Sentry.class);
 
 		RARE.addEntities(Albino.class, GnollExile.class, HermitCrab.class, CausticSlime.class,
-				Bandit.class, SpectralNecromancer.class,
+				Bandit.class, GoldenSkeleton.class, SpectralNecromancer.class,
 				ArmoredBrute.class, DM201.class,
 				Elemental.ChaosElemental.class, Senior.class,
 				Acidic.class,

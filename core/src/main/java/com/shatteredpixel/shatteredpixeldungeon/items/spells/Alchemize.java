@@ -23,9 +23,12 @@ package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.GoldenSkeleton;
+import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
@@ -303,4 +306,18 @@ public class Alchemize extends Spell {
 		}
 
 	}
+
+    @Override
+    protected void onThrow( int cell ) {
+        Char ch = Char.findChar(cell);
+        if (ch instanceof GoldenSkeleton){
+            ((GoldenSkeleton)ch).sell();
+            return;
+        }
+
+        Heap heap = Dungeon.level.drop( this, cell );
+        if (!heap.isEmpty()) {
+            heap.sprite.drop( cell );
+        }
+    }
 }

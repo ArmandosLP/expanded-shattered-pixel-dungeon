@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.GoldenSkeleton;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.RatSkull;
 import com.watabou.utils.Random;
 
@@ -261,6 +262,7 @@ public class MobSpawner extends Actor {
 		RARE_ALTS.put(Crab.class,           HermitCrab.class);
 		RARE_ALTS.put(Slime.class,          CausticSlime.class);
 
+		RARE_ALTS.put(Skeleton.class,       GoldenSkeleton.class);
 		RARE_ALTS.put(Thief.class,          Bandit.class);
 		RARE_ALTS.put(Necromancer.class,    SpectralNecromancer.class);
 

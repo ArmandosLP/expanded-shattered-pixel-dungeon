@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyWard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ShieldOfLight;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.mobs.GoldenSkeleton;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.RyeBread;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.items.food.WheatBread;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -74,7 +75,7 @@ public class Skeleton extends Mob {
 		
 		super.die( cause );
 		
-		if (cause == Chasm.class) return;
+		if (cause == Chasm.class || this instanceof GoldenSkeleton) return;
 		
 		boolean heroKilled = false;
 		for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
