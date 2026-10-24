@@ -442,8 +442,8 @@ public abstract class Char extends Actor {
 			}
 
             if (buff(DemonicFire.class) != null &&
-                    properties.contains(Property.DEMONIC) &&
-                    !enemy.properties.contains(Property.DEMONIC)) // Avoid infinite healing loop if two demons are fighting
+                    Char.hasProp(this, Char.Property.DEMONIC) &&
+                    !Char.hasProp(enemy, Char.Property.DEMONIC)) // Avoid infinite healing loop if two demons are fighting
             {
                 DemonicFlame.burn(enemy);
             }

@@ -68,7 +68,7 @@ public class StrongEye extends Eye {
                 continue;
             }
 
-            if (ch.properties().contains(Property.DEMONIC)) continue;
+            if (Char.hasProp(ch, Char.Property.DEMONIC)) continue;
 
             if (hit( this, ch, true )) {
                 int dmg = Random.NormalIntRange( 30, 50 );
