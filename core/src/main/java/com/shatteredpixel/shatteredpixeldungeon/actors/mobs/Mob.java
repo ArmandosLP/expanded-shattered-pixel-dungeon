@@ -64,11 +64,15 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Surprise;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Wound;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.GoldenRation;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.LuckyCoin;
+import com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets.WoodenSpoon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
@@ -1151,7 +1155,13 @@ public abstract class Mob extends Char {
 				if (Random.Float() < ExoticCrystals.consumableExoticChance()){
 					return Generator.random(ExoticScroll.regToExo.get(loot));
 				}
-			}
+			} else if (loot == Food.class){
+                if (Random.Float() < LuckyCoin.goldenFoodChance()) {
+                    return Generator.random(GoldenRation.class);
+                }
+            } else if (WoodenSpoon.foodToVariant.containsKey(loot) && WoodenSpoon.foodEffectAmplifier() != -1){
+                return Generator.random(Random.element( WoodenSpoon.foodToVariant.get(loot) ));
+            }
 
 			item = Generator.random( (Class<? extends Item>)loot );
 

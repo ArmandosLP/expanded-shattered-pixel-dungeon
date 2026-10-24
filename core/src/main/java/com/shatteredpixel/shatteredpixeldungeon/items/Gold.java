@@ -54,7 +54,7 @@ public class Gold extends Item {
 
     public Gold( int value, boolean useMultiplicators ) {
         if (useMultiplicators){
-            this.quantity = value + (int)(value * LuckyCoin.goldMultiplier());
+            this.quantity = (int)(value * LuckyCoin.goldMultiplier());
         }else{
             this.quantity = value;
         }

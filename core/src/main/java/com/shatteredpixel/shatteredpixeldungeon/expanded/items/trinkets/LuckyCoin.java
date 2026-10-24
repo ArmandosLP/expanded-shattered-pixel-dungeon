@@ -25,7 +25,6 @@ package com.shatteredpixel.shatteredpixeldungeon.expanded.items.trinkets;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 public class LuckyCoin extends Trinket {
 
@@ -46,7 +45,7 @@ public class LuckyCoin extends Trinket {
                             100 * (goldMultiplier(buffedLvl()) - 1f)),
                     Messages.decimalFormat(
                             "#.##",
-                            100 * (goldMultiplier(buffedLvl()) - 1f)),
+                            100 * (goldenFoodChance(buffedLvl()))),
                     extraShopItems(buffedLvl()));
         } else {
             return Messages.get(
@@ -57,7 +56,7 @@ public class LuckyCoin extends Trinket {
                             100 * (goldMultiplier(0) - 1f)),
                     Messages.decimalFormat(
                             "#.##",
-                            100 * (goldMultiplier(0) - 1f)),
+                            100 * (goldenFoodChance(0))),
                     extraShopItems(0));
         }
     }
@@ -84,7 +83,7 @@ public class LuckyCoin extends Trinket {
         if (level == -1){
             return 1f;
         } else {
-            return 1.1f + 0.05f*level;
+            return 1.2f + 0.1f*level;
         }
     }
 

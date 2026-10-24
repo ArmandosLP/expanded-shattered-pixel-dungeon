@@ -71,8 +71,7 @@ public class SecretLarderRoom extends SecretRoom {
 				extraFood -= (Hunger.STARVING - Hunger.HUNGRY);
 			}
 
-            //we use a separate RNG here so that variance due to things like wooden spoon
-            //does not affect levelgen
+            //Use separate RNG so that wooden spoon does not affect levelgen
             Random.pushGenerator(Random.Long());
             if (WoodenSpoon.foodEffectAmplifier() != -1 && WoodenSpoon.foodToVariant.containsKey(food.getClass())){
                 Class<?> newItemCls = Random.element(WoodenSpoon.foodToVariant.get(food.getClass()));
