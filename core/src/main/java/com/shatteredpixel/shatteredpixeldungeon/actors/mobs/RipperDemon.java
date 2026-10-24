@@ -108,7 +108,7 @@ public class RipperDemon extends Mob {
 		leapCooldown = bundle.getFloat(LEAP_CD);
 	}
 
-	private int lastEnemyPos = -1;
+	protected int lastEnemyPos = -1;
 
 	@Override
 	protected boolean act() {
@@ -132,8 +132,8 @@ public class RipperDemon extends Mob {
 		return result;
 	}
 
-	private int leapPos = -1;
-	private float leapCooldown = 0;
+    protected int leapPos = -1;
+	protected float leapCooldown = 0;
 
 	public class Hunting extends Mob.Hunting {
 

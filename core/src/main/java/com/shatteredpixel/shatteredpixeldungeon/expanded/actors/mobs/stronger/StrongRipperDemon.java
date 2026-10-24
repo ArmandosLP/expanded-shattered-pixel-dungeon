@@ -27,8 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.expanded.actors.buffs.Ferocity;
@@ -45,106 +45,25 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class StrongRipperDemon extends Mob {
+public class StrongRipperDemon extends RipperDemon {
 
 	{
 		spriteClass = StrongRipperSprite.class;
-
-        HP = HT = 60;
-        defenseSkill = 22;
-        viewDistance = Light.DISTANCE;
-
-        EXP = 9; //for corrupting
-        maxLvl = -2;
-
         HUNTING = new StrongRipperDemon.Hunting();
-
-        baseSpeed = 1f;
-
-        properties.add(Property.DEMONIC);
-        properties.add(Property.UNDEAD);
     }
 
     @Override
-    public float spawningWeight() {
-        return 0;
+    public String description() {
+        return Messages.get(RipperDemon.class, "desc") + "\n\n" + Messages.get(this, "talent");
     }
-
-    @Override
-    public int damageRoll() {
-        return Random.NormalIntRange( 15, 25 );
-    }
-
-    @Override
-    public int attackSkill( Char target ) {
-        return 30;
-    }
-
-    @Override
-    public float attackDelay() {
-        return super.attackDelay()*0.5f;
-    }
-
-    @Override
-    public int drRoll() {
-        return super.drRoll() + Random.NormalIntRange(0, 4);
-    }
-
-    private static final String LAST_ENEMY_POS = "last_enemy_pos";
-    private static final String LEAP_POS = "leap_pos";
-    private static final String LEAP_CD = "leap_cd";
-    private static final String SCREECH_CD = "screech_cd";
-
-    @Override
-    public void storeInBundle(Bundle bundle) {
-        super.storeInBundle(bundle);
-        bundle.put(LAST_ENEMY_POS, lastEnemyPos);
-        bundle.put(LEAP_POS, leapPos);
-        bundle.put(LEAP_CD, leapCooldown);
-        bundle.put(SCREECH_CD, screechCooldown);
-    }
-
-    @Override
-    public void restoreFromBundle(Bundle bundle) {
-        super.restoreFromBundle(bundle);
-        lastEnemyPos = bundle.getInt(LAST_ENEMY_POS);
-        leapPos = bundle.getInt(LEAP_POS);
-        leapCooldown = bundle.getFloat(LEAP_CD);
-        screechCooldown = bundle.getFloat(SCREECH_CD);
-    }
-
-    private int lastEnemyPos = -1;
 
     @Override
     protected boolean act() {
-        if (state == WANDERING){
-            leapPos = -1;
-        }
-
-        AiState lastState = state;
-        boolean result = super.act();
-        if (paralysed <= 0) {
-            leapCooldown --;
-            screechCooldown --;
-        }
-
-        //if state changed from wandering to hunting, we haven't acted yet, don't update.
-        if (!(lastState == WANDERING && state == HUNTING)) {
-            if (enemy != null) {
-                lastEnemyPos = enemy.pos;
-            } else {
-                lastEnemyPos = Dungeon.hero.pos;
-            }
-        }
-
-        return result;
+        if (paralysed <= 0) screechCooldown--;
+        return super.act();
     }
 
-    private int leapPos = -1;
-    private float leapCooldown = 0;
-
     private float screechCooldown = 0;
-
 
     public void reduceScreechCooldown(int amount){
         // Do not reduce screech cooldown below 2 to avoid rippers spamming it
@@ -159,8 +78,9 @@ public class StrongRipperDemon extends Mob {
                     SpellSprite.show( ripper, SpellSprite.FEROCITY);
                     reduceScreechCooldown(3);
                     Buff.affect(ripper, Ferocity.class).set(5, true);
+                }else if (!ripper.isTargeting(enemy)){
+                    ripper.beckon( enemy.pos );
                 }
-                ripper.beckon( enemy.pos );
             }
         }
     }
@@ -346,7 +266,17 @@ public class StrongRipperDemon extends Mob {
 
     }
 
+    private static final String SCREECH_CD = "screech_cd";
 
+    @Override
+    public void storeInBundle(Bundle bundle) {
+        super.storeInBundle(bundle);
+        bundle.put(SCREECH_CD, screechCooldown);
+    }
 
-
+    @Override
+    public void restoreFromBundle(Bundle bundle) {
+        super.restoreFromBundle(bundle);
+        screechCooldown = bundle.getFloat(SCREECH_CD);
+    }
 }
