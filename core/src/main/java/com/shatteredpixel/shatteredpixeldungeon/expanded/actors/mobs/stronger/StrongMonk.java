@@ -90,15 +90,6 @@ public class StrongMonk extends Mob {
         if (energy < 0){ energy = 0; }
     }
 
-    @Override
-    public Item createLoot() {
-        if (WoodenSpoon.foodEffectAmplifier() != -1 && WoodenSpoon.foodToVariant.containsKey(loot)){
-            Class<?> newItemCls = Random.element(WoodenSpoon.foodToVariant.get(loot));
-            return (Food) Reflection.newInstance(newItemCls);
-        }
-        return super.createLoot();
-    }
-
 	@Override
 	public int damageRoll() {
 		return Random.NormalIntRange( 12, 25 );
@@ -159,7 +150,6 @@ public class StrongMonk extends Mob {
             add(afterKickAgro);
         }
     }
-
 
     @Override
     protected boolean doAttack( Char enemy ) {
