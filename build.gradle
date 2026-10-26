@@ -14,8 +14,9 @@ allprojects {
         appName = 'Shattered Pixel Dungeon +'
         appPackageName = 'com.armandos.expandedshatteredpixeldungeon'
 
-        appVersionCode = 922
-        appVersionName = '1.4.5'
+        //Full releases gets +2 on version code, needed for an F-Droid quirk
+        appVersionCode = 924
+        appVersionName = '1.5.0'
 
         appJavaCompatibility = JavaVersion.VERSION_11
 
