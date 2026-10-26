@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class HawkBeak extends MeleeWeapon {
+public class Halberd extends MeleeWeapon {
 
 	{
 		image = ItemSpriteSheet.HALBERD;

@@ -53,7 +53,14 @@ public class ShatteredPixelDungeon extends Game {
 				com.shatteredpixel.shatteredpixeldungeon.items.keys.WornKey.class,
 				"com.shatteredpixel.shatteredpixeldungeon.items.keys.SkeletonKey" );
 
-	}
+        //pre-expanded-beta1.4.5
+        com.watabou.utils.Bundle.addAlias(
+                com.shatteredpixel.shatteredpixeldungeon.expanded.items.weapon.melee.Halberd.class,
+                "com.shatteredpixel.shatteredpixeldungeon.expanded.items.weapon.melee.HawkBeak" );
+        com.watabou.utils.Bundle.addAlias(
+                com.shatteredpixel.shatteredpixeldungeon.expanded.items.weapon.melee.MorningStar.class,
+                "com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MorningStar" );
+    }
 	
 	@Override
 	public void create() {
