@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.expanded.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.ExpandedWeaponAbilities;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MorningStar;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
@@ -32,7 +32,7 @@ import com.watabou.utils.Random;
 public class HawkBeak extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.HAWKBEAK;
+		image = ItemSpriteSheet.HALBERD;
 		hitSoundPitch = 1f;
 
 		tier = 4;
@@ -75,7 +75,7 @@ public class HawkBeak extends MeleeWeapon {
     protected void duelistAbility(Hero hero, Integer target) {
         //+(2+lvl) damage, bonus damage is low because paralysis already gives a free hit
         int dmgBoost = augment.damageFactor(2 + buffedLvl());
-        MorningStar.headBlowAbility(hero, target, 1, dmgBoost, this);
+        ExpandedWeaponAbilities.headBlowAbility(hero, target, 1, dmgBoost, this);
     }
 
     @Override
